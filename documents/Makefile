@@ -1,12 +1,15 @@
 
-all: biblio.pdf
+all: biblio.pdf etude.pdf
 
 %.pdf: %.dvi
 	dvipdf $< $@
 
-%.dvi: %.tex
+biblio.dvi: biblio.tex
 	latex $<
 	latex $<
 	bibtex $(basename $< .tex)
 	latex $<
 	latex $<
+
+etude.dvi: etude.tex
+	latex $< 
