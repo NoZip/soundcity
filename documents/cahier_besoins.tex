@@ -1,0 +1,102 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+
+\title{Cahier des Besoins}
+\author{Lucas Vauzelle \and Baptiste Fumaroli \and Jean Pecqueur \and Thomas Pizon}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\part{Besoins Fonctionnels}
+
+Ce projet est séparé en plusieurs modules indépendants qui communiquent entre
+eux~:
+\begin{itemize}
+\item Module de génération
+\item Module de données
+\item Module de sortie
+\item Module d'interface utilisateur
+\end{itemize}
+
+\section{Module de génération}
+
+Ce module doit générer une playlist de morceaux cohérente et répondant aux
+données envoyées depuis l’interface utilisateur. Cet étapes se décompose en
+deux besoins différents: la sélection et l'ordonnancement. Après ces étapes,
+la playlist doit être communiquer au module de sortie, en fonction de la
+solution de sortie choisie par l’utilisateur.
+
+\subsection{Sélection}
+
+Durant la phase de sélection, le générateur doit se connecter au module de
+base de données pour récupérer les morceaux correspondants aux facteurs
+suivants~:
+\begin{itemize}
+\item La durée de la playlist ou le nombre de morceaux désirés.
+\item Un style (optionnel), choisi dans un ensemble de styles prédéfinis.
+\item Un artiste (optionnel).
+\item Une intervalle d'années.
+\item La dancabilité des morceaux (optionnel, en pourcentage).
+\item La popularité minimale des morceaux (optionnel, en pourcentage).
+\item Entre 3 et 5 paramètres définissant un profil de morceaux (optionnel,
+pourcentages, a définir)
+\end{itemize}
+
+\subsection{Ordonnancement}
+
+Ensuite dans cette deuxième phase, les morceaux sont ordonnées pour former une
+liste cohérente mais variée de morceaux. Pour cela il faut calculer la
+similarité (score en pourcentage) des morceaux entre eux. Un enchaînement
+entre deux morceaux trop différents (seuil à déterminer) provoquera une perte
+de cohérence. Et un enchaînement entre deux morceaux trop proches (seuil à
+déterminer) provoquera une perte de variété. Les doublons de morceaux doivent
+être évités.
+
+\section{Module de données}
+
+Ce module devra répondre aux requêtes du module de génération et produire une
+sortie utilisable par ce module. Il ne récupérera qu’une sous partie des
+entrées correspondant aux critères pour éviter une perte de performances lors
+de l'ordonnancement (env 1000).
+
+\section{Module de sortie}
+
+Ce module devra être capable de produire une représentation de la playlist
+utilisable par d’autres programmes. Par exemple un affichage sous forme de
+texte.
+
+Modules de sortie envisagés~:
+\begin{itemize}
+\item Texte.
+\item Playlist Deezer (optionnel).
+\end{itemize}
+
+\section{Module d'interface utilisateur}
+
+Ce module permettra à l’utilisateur de rentrer les données nécéssaires au
+module de génération de playlist.
+
+Modules d'interface envisagés~:
+\begin{itemize}
+\item Console.
+\item Interface graphique (optionnel).
+\item Interface web (optionnel).
+\end{itemize}
+
+\part{Besoins non-fonctionnels}
+
+\begin{itemize}
+\item La sélection et l'ordonnancement de morceaux doivent être suffisamment
+rapides (15s maximum)
+\item Les modules de sortie, de base de données, et d’interface doivent
+pouvoir être changés sans altérer le fonctionnement du module de génération.
+\item Interface simple et intuitive, destiné à un large public (optionnel).
+\item Cohérence globale de la playlist.
+\end{itemize}
+
+\end{document}
