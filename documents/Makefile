@@ -1,15 +1,17 @@
 
-all: biblio.pdf etude.pdf
+all: biblio.pdf etude.pdf cahier_besoins.pdf
 
-%.pdf: %.dvi
-	dvipdf $< $@
-
-biblio.dvi: biblio.tex
-	latex $<
-	latex $<
+biblio.pdf: biblio.tex
+	pdflatex $<
+	pdflatex $<
 	bibtex $(basename $< .tex)
-	latex $<
-	latex $<
+	pdflatex $<
+	pdflatex $<
 
-etude.dvi: etude.tex
-	latex $< 
+etude.pdf: etude.tex
+	pdflatex $<
+	pdflatex $<
+
+cahier_besoins.pdf: cahier_besoins.tex
+	pdflatex $<
+	pdflatex $<
