@@ -1,5 +1,5 @@
-#ifndef _ISelectionObserver_
-#define _ISelectionObserver_
+#ifndef ISELECTIONOBSERVER_H
+#define ISELECTIONOBSERVER_H
 
 namespace SoundCity
 {

@@ -1,5 +1,5 @@
-#ifndef _IGenerationObserver_
-#define _IGenerationObserver_
+#ifndef IGENERATIONOBSERVER_H
+#define IGENERATIONOBSERVER_H
 
 namespace SoundCity
 {
