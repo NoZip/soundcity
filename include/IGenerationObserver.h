@@ -1,6 +1,8 @@
 #ifndef IGENERATIONOBSERVER_H
 #define IGENERATIONOBSERVER_H
 
+#include <Track>
+
 namespace SoundCity
 {
 
