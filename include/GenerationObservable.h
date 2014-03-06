@@ -1,6 +1,8 @@
 #ifndef GENERATIONOBSERVABLE_H
 #define GENERATIONOBSERVABLE_H
 
+#include <list>
+
 #include <Track>
 #include <IGenerationObserver>
 

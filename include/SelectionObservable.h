@@ -1,6 +1,8 @@
 #ifndef SELECTIONOBSERVABLE_H
 #define SELECTIONOBSERVABLE_H
 
+#include <list>
+
 #include <TrackPool>
 #include <ISelectionObserver>
 
