@@ -6,7 +6,7 @@
 #include <TrackPool>
 #include <ISelectionObserver>
 
-namespace Soundcity {
+namespace SoundCity {
 
 /**
  * Gère le feedback de l'étape de sélection.

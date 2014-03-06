@@ -6,7 +6,7 @@
 #include <Track>
 #include <IGenerationObserver>
 
-namespace Soundcity {
+namespace SoundCity {
 
 /**
  * Gère le feedback de l'étape de génération.
