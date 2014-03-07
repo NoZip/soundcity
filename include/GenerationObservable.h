@@ -3,8 +3,8 @@
 
 #include <list>
 
-#include <Track>
-#include <IGenerationObserver>
+#include <Track.h>
+#include <IGenerationObserver.h>
 
 namespace SoundCity {
 
@@ -38,7 +38,7 @@ public:
   void notifyAll(std::size_t index, std::size_t size, const Track &track);
 
 protected:
-  std::list<IGenerationObserver>; ///< La liste d'observers interne.
+  std::list<IGenerationObserver> linkedObservers; ///< Liste d'observers interne.
 };
 
 } // end namespace SoundCity
