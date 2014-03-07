@@ -1,7 +1,7 @@
 #ifndef ALBUM_H
 #define ALBUM_H
 
-#include <String>
+#include <string>
 
 namespace SoundCity
 {
@@ -10,17 +10,17 @@ namespace SoundCity
  */
 class Album {
   public:
-    Artist(int id, String title, String artist, int release);
+    Album(int id, const std::string &title, const std::string &artist, int release);
 
     int getId() const {return id;}
-    String getTitle() const {return title;}
-    String getArtist() const {return artist;}
+    std::string getTitle() const {return title;}
+    std::string getArtist() const {return artist;}
     int getReleaseDate() const {return release;}
 
   private:
     int id;
-    String title;
-    String artist;
+    std::string title;
+    std::string artist;
     int release;
 };
 

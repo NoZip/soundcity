@@ -8,7 +8,7 @@ namespace SoundCity
  */
 class SignalData {
   public:
-    SignalData(Artist artist, Album album, float popularity);
+    SignalData(float rhythm, float energy, float tonality);
 
     float getRhythm() const {return rhythm;}
     float getEnergy() const {return energy;}
