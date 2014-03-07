@@ -3,8 +3,8 @@
 
 #include <list>
 
-#include <TrackPool>
-#include <ISelectionObserver>
+#include <TrackPool.h>
+#include <ISelectionObserver.h>
 
 namespace SoundCity {
 
@@ -35,7 +35,7 @@ public:
   void notifyAll(std::size_t size, const TrackPool &pool);
 
 protected:
-  std::list<ISelectionObserver>; ///< La liste d'observers interne.
+  std::list<ISelectionObserver> linkedObservers; ///< Liste d'observers interne.
 };
 
 } // end namespace SoundCity
