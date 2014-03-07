@@ -19,6 +19,10 @@
   },
   "build_systems":
   [
-
+    {
+      "name": "Syntax Check (GCC)",
+      "cmd": ["g++", "-fsyntax-only", "-std=c++11", "-Iinclude/", "$file"],
+      "working_dir": "$project_path",
+    },
   ]
 }
