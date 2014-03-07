@@ -2,9 +2,9 @@
 #define TRACKPOOL_H
 
 #include <unordered_set>
-#include <functionnal>
+#include <functional>
 
-#include <Track>
+#include <Track.h>
 
 /*
   Fichier de test, je suis absolument pas sûr que ça marche.
