@@ -11,7 +11,7 @@ namespace SoundCity
 class Album {
   public:
     Album(int id, const std::string &title, const std::string &artist, int release);
-
+    //Getters
     int getId() const {return id;}
     std::string getTitle() const {return title;}
     std::string getArtist() const {return artist;}

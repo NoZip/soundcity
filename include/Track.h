@@ -13,8 +13,11 @@ namespace SoundCity
 class Track {
   public:
     Track(int id, const SignalData &signal, const ContextData &context);
-
+    //Getters
     int getId() const {return id;}
+    ContextData getContextData() const {return context;}
+    SignalData getSignalData() const {return signal;}
+    //Raccourcis
     int getArtistId() const {return context.getArtistId();}
     std::string getArtistName() const {return context.getArtistName();}
     float getArtistFamiliarity() const {return context.getArtistFamiliarity();}
