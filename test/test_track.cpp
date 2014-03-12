@@ -19,6 +19,8 @@ int main()
   Track test(1,sign,data);
   std::cout << "Track id : " << test.getId() << "\n";
   std::cout << "Artist id : " << test.getArtistId() << "\n";
+  Artist a = test.getContextData().getArtist();
+  std::cout << "Artist name : " <<  a.getName() << "\n";
   std::cout << "Artist name : " << test.getArtistName() << "\n";
   std::cout << "Artist familiarity : " << test.getArtistFamiliarity() << "\n";
   std::cout << "Artist popularity : " << test.getArtistPopularity() << "\n";
