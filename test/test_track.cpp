@@ -3,32 +3,28 @@
 #include <string>
 
 using namespace SoundCity;
+using namespace std;
 
 int main()
 {
-  std::string name, albumName, name2;
-  name = "Test";
-  Artist art(1,name,0.4,1.0);
-  //std::cout << art.getName() << "\n";
-  albumName = "Testalbum";
-  name2 = "Test";
-  Album alb(1,albumName,name2,2012);
-  ContextData data(art,alb,0.5);
-  //std::cout << data.getArtistName() << "\n";
+  Artist artist(1, "The White Stripes", 0.4, 1.0);
+  //cout << artist.getName() << endl;
+  Album album(1, "Elephant", "The White Stripes", 2012);
+  //cout << album.getArtist() << endl;
+  ContextData data(artist, album, 0.5);
+  //cout << data.getArtistName() << endl;
   SignalData sign(0.2,0.3,0.4);
-  Track test(1,sign,data);
-  std::cout << "Track id : " << test.getId() << "\n";
-  std::cout << "Artist id : " << test.getArtistId() << "\n";
-  Artist a = test.getContextData().getArtist();
-  std::cout << "Artist name : " <<  a.getName() << "\n";
-  std::cout << "Artist name : " << test.getArtistName() << "\n";
-  std::cout << "Artist familiarity : " << test.getArtistFamiliarity() << "\n";
-  std::cout << "Artist popularity : " << test.getArtistPopularity() << "\n";
-  std::cout << "Album Title : " << test.getAlbumTitle() << "\n";
-  std::cout << "Album Artist : " << test.getAlbumArtist() << "\n";
-  std::cout << "Album Release : " << test.getAlbumReleaseDate() << "\n";
-  std::cout << "Track Popularity : " << test.getPopularity() << "\n";
-  std::cout << "Track Rhythm : " << test.getRhythm() << "\n";
-  std::cout << "Track Energy : " << test.getEnergy() << "\n";
-  std::cout << "Track Tonality : " << test.getTonality() << "\n";
+  Track test(1, sign ,data);
+  cout << "Track id : " << test.getId() << endl;
+  cout << "Artist id : " << test.getContextData().getArtist().getId() << endl;
+  cout << "Artist name : " <<  test.getContextData().getArtist().getName() << endl;
+  cout << "Artist familiarity : " << test.getContextData().getArtist().getFamiliarity() << endl;
+  cout << "Artist popularity : " << test.getContextData().getArtist().getPopularity() << endl;
+  cout << "Album Title : " << test.getContextData().getAlbum().getTitle() << endl;
+  cout << "Album Artist : " << test.getContextData().getAlbum().getArtist() << endl;
+  cout << "Album Release : " << test.getContextData().getAlbum().getReleaseDate() << endl;
+  cout << "Track Popularity : " << test.getContextData().getPopularity() << endl;
+  cout << "Track Rhythm : " << test.getSignalData().getRhythm() << endl;
+  cout << "Track Energy : " << test.getSignalData().getEnergy() << endl;
+  cout << "Track Tonality : " << test.getSignalData().getTonality() << endl;
 }
