@@ -13,10 +13,12 @@ namespace SoundCity
 class ContextData {
   public:
     ContextData(const Artist &artist, const Album &album, float popularity);
+
     //Getters
-    Artist getArtist() const {return artist;}
-    Album getAlbum() const {return album;}
+    const Artist &getArtist() const {return artist;}
+    const Album &getAlbum() const {return album;}
     float getPopularity() const {return popularity;}
+
     //Raccourcis
     int getArtistId() const {return artist.getId();}
     std::string getArtistName() const {return artist.getName();}
