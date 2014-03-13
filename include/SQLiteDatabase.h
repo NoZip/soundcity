@@ -1,20 +1,23 @@
 #ifndef SQLITEDATABASE_H
 #define SQLITEDATABASE_H
 
-#include <list>
 #include <string>
 
+#include <sqlite3.h>
+
 #include <TrackPool.h>
+#include <OptionList.h>
 #include <IDatabase.h>
 
 namespace SoundCity
 {
-  /**
-   * Module de base de données SQLite.
-   */
-  class SQLiteDatabase{
- public:
-  SQLiteDatabase();
+
+/**
+ * Module de base de données SQLite.
+ */
+class SQLiteDatabase : public IDatabase {
+public:
+  SQLiteDatabase(const std::string &filename);
 
   /**
    * Initialise et vérifie que la base de données est présente
@@ -29,9 +32,12 @@ namespace SoundCity
    * sélection des morceaux.
    * @param size le nombre de morceaux à sélectionner.
    */
-  
-  TrackPool select(std::list<std::string> options,
-    std::size_t size);
+  TrackPool select(const OptionList &options, std::size_t size);
+
+protected:
+  std::string filename;
+  sqlite3 *dbConnection;
+  sqlite3_stmt *preparedRequest;
 };
   
 } //end namespace SoundCity
