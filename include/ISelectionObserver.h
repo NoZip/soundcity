@@ -1,7 +1,7 @@
 #ifndef ISELECTIONOBSERVER_H
 #define ISELECTIONOBSERVER_H
 
-#include <TrackPool>
+#include <TrackPool.h>
 
 namespace SoundCity
 {

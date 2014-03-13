@@ -3,18 +3,8 @@
 using namespace SoundCity;
 
 GenerationObservable::GenerationObservable()
-{
+: Observable<IGenerationObserver>() {
 
-}
-
-void GenerationObservable::attach(const IGenerationObserver &observer)
-{
-  linkedObservers.push_back(observer);
-}
-
-void GenerationObservable::detach(const IGenerationObserver &observer)
-{
-  linkedObservers.remove(observer);
 }
 
 void GenerationObservable::notifyAll(

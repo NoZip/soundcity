@@ -1,9 +1,8 @@
 #ifndef GENERATIONOBSERVABLE_H
 #define GENERATIONOBSERVABLE_H
 
-#include <list>
-
 #include <Track.h>
+#include <Observable.hpp>
 #include <IGenerationObserver.h>
 
 namespace SoundCity {
@@ -11,21 +10,9 @@ namespace SoundCity {
 /**
  * Gère le feedback de l'étape de génération.
  */
-class GenerationObservable {
+class GenerationObservable : public Observable<IGenerationObserver> {
 public:
   GenerationObservable();
-
-  /**
-   * Attache un observer.
-   * @param observer L'observer à ajouter.
-   */
-  void attach(const IGenerationObserver &observer);
-
-  /**
-   * Détache un observer.
-   * @param observer l'observer à détacher.
-   */
-  void detach(const IGenerationObserver &observer);
 
   /**
    * Envoie une notification à tous les observers pour qu'ils puissent esecuter
@@ -36,9 +23,6 @@ public:
    * @param track La piste qui vient d'être ajoutée.
    */
   void notifyAll(std::size_t index, std::size_t size, const Track &track);
-
-protected:
-  std::list<IGenerationObserver> linkedObservers; ///< Liste d'observers interne.
 };
 
 } // end namespace SoundCity

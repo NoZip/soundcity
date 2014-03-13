@@ -1,7 +1,7 @@
 #ifndef IGENERATIONOBSERVER_H
 #define IGENERATIONOBSERVER_H
 
-#include <Track>
+#include <Track.h>
 
 namespace SoundCity
 {
@@ -19,7 +19,7 @@ public:
    * @param size  Le nombre de pistes visé par le générateur.
    * @param track La piste qui vient d'être ajoutée.
    */
-  virtual void notify(std::size_t index, int std::size_t size, const Track &track) = 0;
+  virtual void notify(std::size_t index, std::size_t size, const Track &track) = 0;
 };
 
 } // end namespace SoundCity
