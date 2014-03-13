@@ -17,7 +17,7 @@ namespace std {
  */
 template <>
 struct hash<SoundCity::Track> {
-  std::size_t operator()(const SoundCity::Track &track) {
+  std::size_t operator()(const SoundCity::Track &track) const {
     return std::hash<int>()(track.getId());
   }
 };
