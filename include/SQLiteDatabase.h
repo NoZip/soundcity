@@ -17,7 +17,8 @@ namespace SoundCity
  */
 class SQLiteDatabase : public IDatabase {
 public:
-  SQLiteDatabase(const std::string &filename);
+  SQLiteDatabase(const std::string &file);
+  virtual ~SQLiteDatabase();
 
   /**
    * Initialise et vérifie que la base de données est présente
@@ -35,9 +36,8 @@ public:
   TrackPool select(const OptionList &options, std::size_t size);
 
 protected:
-  std::string filename;
-  sqlite3 *dbConnection;
-  sqlite3_stmt *preparedRequest;
+  std::string filename; ///< Le nom du fichier contenant la database.
+  sqlite3 *dbConnection; ///< La connection à la database sqlite3.
 };
   
 } //end namespace SoundCity
