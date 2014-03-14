@@ -11,5 +11,5 @@ Album::Album(int id, const std::string &title, const std::string &artist, int re
   {
     assert(&title);
     assert(&artist);
-    assert(release);
+    assert(release > 0);
   }
