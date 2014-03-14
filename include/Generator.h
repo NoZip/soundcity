@@ -17,10 +17,10 @@ namespace SoundCity
    */
   class Generator{
   public:
-    Generator(const Database &db,
-	      const SelectionObservable &selection_feedback,
-	      const GenerationObservable &generation_feedback, 
-	      const SimilarityStrategy &similarity);
+    Generator(const IDatabase &db,
+	      const ISelectionObservable &selection_feedback,
+	      const IGenerationObservable &generation_feedback, 
+	      const ISimilarityStrategy &similarity);
 
     /**
      * Initialise le générateur et vérifie que tout est 
@@ -46,10 +46,10 @@ namespace SoundCity
 			Playlist playlist);
 
   private:
-    Database db;
-    SelectionObservable selection_feedback;
-    GenerationObservable generation_feedback;
-    SimilarityStrategy similarity;
+    IDatabase db;
+    ISelectionObservable selection_feedback;
+    IGenerationObservable generation_feedback;
+    ISimilarityStrategy similarity;
     
   };
 }
