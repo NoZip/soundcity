@@ -46,6 +46,7 @@ int SQLiteDatabase::initialization()
 enum RowIndex {
   TRACK_ID,
   TRACK_DURATION,
+  TRACK_TITLE,
   CONTEXT_POPULARITY,
   CONTEXT_ARTIST_ID,
   CONTEXT_ARTIST_NAME,
@@ -69,6 +70,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   buffer << u8"SELECT ";
     // Track
     buffer << u8"tracks.id, ";
+    buffer << u8"tracks.title, ";
     buffer << u8"tracks.duration, ";
       // Context
       buffer << u8"tracks.popularity, ";
@@ -87,7 +89,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
           buffer << u8"album_artists.familiarity, ";
           buffer << u8"album_artists.popularity, ";
       // Signal
-      buffer << u8"tracks.tempo, tracks.loudness, 0.0 ",
+      buffer << u8"0.0, 0.0, 0.0 ",
   buffer << u8" ";
   buffer << u8"FROM tracks ";
   buffer << u8"INNER JOIN albums ";
@@ -150,6 +152,9 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
 
     Track track(
       sqlite3_column_int(preparedRequest, TRACK_ID),
+      reinterpret_cast<char const *>(
+        sqlite3_column_text(preparedRequest, TRACK_TITLE)
+      ),
       SignalData(
         sqlite3_column_double(preparedRequest, SIGNAL_RHYTHM),
         sqlite3_column_double(preparedRequest, SIGNAL_ENERGY),

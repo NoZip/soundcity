@@ -34,6 +34,8 @@ class Track {
     float getEnergy() const {return signal.getEnergy();}
     float getTonality() const {return signal.getTonality();}
 
+    bool operator==(const Track &track) const {return (id == track.id);}
+
   private:
     int id;
     std::string title;
