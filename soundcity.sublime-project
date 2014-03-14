@@ -22,6 +22,7 @@
     {
       "name": "Syntax Check (GCC)",
       "cmd": ["g++", "-fsyntax-only", "-std=c++11", "-Iinclude/", "$file"],
+      "file_regex": "^(..[^:]*):([0-9]+):([0-9]+): (.+): (.*)$",
       "working_dir": "$project_path",
     },
   ]
