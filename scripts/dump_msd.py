@@ -20,7 +20,9 @@ CREATE TABLE tracks (
     loudness INTEGER NOT NULL,
     tempo FLOAT NOT NULL,
     key INT NOT NULL,
+    key_confidence FLOAT NOT NULL,
     mode INT NOT NULL,
+    mode_confidence FLOAT NOT NULL,
     id_deezer INT,
     CONSTRAINT taa UNIQUE (title, album_id)
 )
@@ -53,7 +55,6 @@ def create_tables(sql_connection):
 
 def add_track(sql_connection, track):
     "Add a track to the sqlite database"
-    print("Ajout de le piste", track["title"])
 
     id = sql_connection.execute("""
     SELECT MAX(id)
@@ -72,7 +73,9 @@ def add_track(sql_connection, track):
         :loudness,
         :tempo,
         :key,
+        :key_confidence,
         :mode,
+        :mode_confidence,
         NULL
     )
     """, track)
@@ -81,7 +84,6 @@ def add_track(sql_connection, track):
 
 def add_album(sql_connection, album):
     "Add an album to the sqlite database"
-    #print("Ajout de l'album", album["title"])
 
     id = sql_connection.execute("""
     SELECT MAX(id)
@@ -103,7 +105,6 @@ def add_album(sql_connection, album):
 
 def add_artist(sql_connection, artist):
     "Add an artist to the sqlite database"
-    #print("Ajout de l'artiste", artist["name"])
 
     id = sql_connection.execute("""
     SELECT MAX(id)
@@ -174,17 +175,15 @@ def analyse_file(sql_connection, path):
                 loudness = analysis["loudness"],
                 tempo = analysis["tempo"],
                 key = int(analysis["key"]),
-                key_confidence = analysis["key_confidence"],
+                key_confidence = analysis["key_confidence"] \
+                    if not numpy.isnan(analysis["key_confidence"]) else 0,
                 mode = int(analysis["mode"]),
-                mode_confidence = analysis["mode_confidence"]
+                mode_confidence = analysis["mode_confidence"] \
+                    if not numpy.isnan(analysis["mode_confidence"]) else 0,
             )
         )
 
-        # if not verify_song(song):
-        #     print("Rejet de", song["track"]["title"])
-        #     break
-
-        print("Analyse de", song["track"]["title"])
+        print("Analyse de", song["track"]["title"], "par", song["artist"]["name"])
 
         # Adds an artist if not in database
         if song["artist"]["name"] not in artists:
@@ -219,9 +218,10 @@ def analyse_file(sql_connection, path):
             loudness = song["track"]["loudness"],
             tempo = song["track"]["tempo"],
             key = song["track"]["key"],
+            key_confidence = song["track"]["key_confidence"],
             mode = song["track"]["mode"],
+            mode_confidence = song["track"]["mode_confidence"],
         )
-
 
         if (track["title"], track["album_id"]) in tracks:
             print("Track already in database")
@@ -259,4 +259,3 @@ if __name__ == "__main__":
     sql_connection = sqlite3.connect(options.database_name + ".db")
     create_tables(sql_connection)
     analyse_dir(sql_connection, options.msd_directory)
-    print(tracks_id_count)
