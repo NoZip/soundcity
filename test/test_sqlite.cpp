@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
 
   for (const Track &track : pool)
   {
-    cout << track.getArtistName() << " - " << track.getAlbumTitle() << endl;
+    cout << track.getTitle() << " | " << track.getArtistName() << endl;
   }
 }
 // 

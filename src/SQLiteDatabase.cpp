@@ -45,8 +45,8 @@ int SQLiteDatabase::initialization()
 
 enum RowIndex {
   TRACK_ID,
-  TRACK_DURATION,
   TRACK_TITLE,
+  TRACK_DURATION,
   CONTEXT_POPULARITY,
   CONTEXT_ARTIST_ID,
   CONTEXT_ARTIST_NAME,
