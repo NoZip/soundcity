@@ -14,8 +14,9 @@ int main()
   ContextData data(artist, album, 0.5);
   //cout << data.getArtistName() << endl;
   SignalData sign(0.2,0.3,0.4);
-  Track test(1, sign ,data);
+  Track test(1, "Seven Nations Army", sign ,data);
   cout << "Track id : " << test.getId() << endl;
+  cout << "Track Title : " << test.getTitle() << endl;
   cout << "Artist id : " << test.getContextData().getArtist().getId() << endl;
   cout << "Artist name : " <<  test.getContextData().getArtist().getName() << endl;
   cout << "Artist familiarity : " << test.getContextData().getArtist().getFamiliarity() << endl;
