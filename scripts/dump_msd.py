@@ -256,6 +256,7 @@ if __name__ == "__main__":
     )
     options = options_parser.parse_args()
 
-    sql_connection = sqlite3.connect(options.database_name + ".db")
+    sql_connection = sqlite3.connect(options.database_name + ".sqlite")
     create_tables(sql_connection)
     analyse_dir(sql_connection, options.msd_directory)
+    sql_connection.close()
