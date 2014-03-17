@@ -19,7 +19,7 @@ namespace SoundCity
      * @param track1 Premier morceau à comparer
      * @param track2 Deuxième morceau à comparer
      */
-    virtual float compute(Track track1, Track track2) = 0;
+    virtual float compute(Track track1, Track track2) const = 0;
   };
 
 }
