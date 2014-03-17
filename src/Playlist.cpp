@@ -4,6 +4,5 @@
 using namespace SoundCity;
 
 Playlist::Playlist():
-  playlist(),
   valid(0)
   {}
