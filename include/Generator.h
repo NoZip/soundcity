@@ -6,9 +6,10 @@
 
 #include <IDatabase.h>
 #include <ISimilarityStrategy.h>
-#include <ISelectionObserver.h>
-#include <IGenerationObserver.h>
+#include <SelectionObservable.h>
+#include <GenerationObservable.h>
 #include <Playlist.h>
+#include <OptionList.h>
 
 namespace SoundCity
 {
@@ -17,39 +18,31 @@ namespace SoundCity
    */
   class Generator{
   public:
-    Generator(const IDatabase &db,
-	      const ISelectionObservable &selection_feedback,
-	      const IGenerationObservable &generation_feedback, 
+    Generator(IDatabase &db,
 	      const ISimilarityStrategy &similarity);
 
     /**
      * Initialise le générateur et vérifie que tout est 
      * fonctionnel.
      */
-    int initialization();
+    int initialization() const;
     
     /**
      * Génère la playlist
-     * @param options Une liste des options pour la génération.
-     * @param size La taille de la playlist à générer.
-     * @param is_duration indique si la durée est en nombre de 
-     * morceaux ou en temps
+     * @param optionList Une liste des options pour la génération.
      */
-    Playlist generate(std::list<std::string> options,
-		      std::size_t size, 
-		      int is_duration);
+    Playlist generate(OptionList optionList);
     
     /**
      * Regénère la playlist
      */
-    Playlist regenerate(std::list<std::string> options, 
-			Playlist playlist);
+    Playlist regenerate(OptionList optionList, Playlist playlist);
 
   private:
-    IDatabase db;
-    ISelectionObservable selection_feedback;
-    IGenerationObservable generation_feedback;
-    ISimilarityStrategy similarity;
+    IDatabase &db;
+    SelectionObservable selectionFeedback;
+    GenerationObservable generationFeedback;
+    const ISimilarityStrategy &similarity;
     
   };
 }
