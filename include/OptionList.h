@@ -10,7 +10,7 @@ namespace SoundCity
  */
 class OptionList {
   public:
-    OptionList(const std::string &artist, int startYear, int endYear, float popularity, float energy, float rhythm, float mood);
+    OptionList(const std::string &artist, int startYear, int endYear, float popularity, float energy, float rhythm, float mood, std::size_t size);
     //Getters
     std::string getArtist() const {return artist;}
     int getStartYear() const {return startYear;}
@@ -19,6 +19,7 @@ class OptionList {
     float getRhythm() const {return rhythm;}
     float getEnergy() const {return energy;}
     float getMood() const {return mood;}
+    std::size_t getSize() const {return size;}
 
   private:
     std::string artist;
@@ -28,6 +29,7 @@ class OptionList {
     float energy;
     float rhythm;
     float mood;
+    std::size_t size;
 };
 
 }
