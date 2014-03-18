@@ -16,7 +16,7 @@ namespace SoundCity
      * @param playlist La playlist générée.
      */
     
-    virtual void format(Playlist playlist) = 0;
+    virtual void format(Playlist &playlist) = 0;
   };
 }
 
