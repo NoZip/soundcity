@@ -23,6 +23,8 @@ CREATE TABLE tracks (
     key_confidence FLOAT NOT NULL,
     mode INT NOT NULL,
     mode_confidence FLOAT NOT NULL,
+    rhythm FLOAT NOT NULL,
+    energy FLOAT NOT NULL,
     id_deezer INT,
     CONSTRAINT taa UNIQUE (title, album_id)
 )
@@ -76,6 +78,8 @@ def add_track(sql_connection, track):
         :key_confidence,
         :mode,
         :mode_confidence,
+        :rhythm,
+        :energy,
         NULL
     )
     """, track)
@@ -146,6 +150,20 @@ def verify_song(song):
         #and song["track"]["key_confidence"] > 0.5
         #and song["track"]["mode_confidence"] > 0.6
     )
+
+def compute_score(value, min, max, f=None):
+    score = value - min
+    if score < 0:
+        score = 0
+
+    score /= max - min
+    if score > 1:
+        score = 1
+
+    if f:
+        score = f(score)
+
+    return score
 
 def analyse_file(sql_connection, path):
     data = tables.open_file(path)
@@ -221,6 +239,8 @@ def analyse_file(sql_connection, path):
             key_confidence = song["track"]["key_confidence"],
             mode = song["track"]["mode"],
             mode_confidence = song["track"]["mode_confidence"],
+            rhythm=compute_score(song["track"]["tempo"], 40, 200),
+            energy=compute_score(song["track"]["loudness"]+60, 20, 100)
         )
 
         if (track["title"], track["album_id"]) in tracks:
