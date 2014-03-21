@@ -89,7 +89,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
           buffer << u8"album_artists.familiarity, ";
           buffer << u8"album_artists.popularity, ";
       // Signal
-      buffer << u8"0.0, 0.0, 0.0 ",
+      buffer << u8"tracks.rhythm, tracks.energy, 0.0 ",
   buffer << u8" ";
   buffer << u8"FROM tracks ";
   buffer << u8"INNER JOIN albums ";
