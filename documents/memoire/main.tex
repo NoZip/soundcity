@@ -1,0 +1,56 @@
+\documentclass[a4paper, 11pt]{memoir}
+
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx} % pour les images
+
+\title{Mémoire:\\ Génération de Playlists}
+\author{Lucas Vauzelle \and Baptiste Fumaroli \and Jean Pecqueur \and Thomas Pizon}
+\date{\today}
+
+\begin{document}
+
+\maketitle % Page de titre
+\clearpage
+
+\frontmatter*
+
+\chapter*{Introduction}
+
+% TODO: Introduction
+
+\clearpage
+
+% Table des Matières
+\tableofcontents
+
+\mainmatter*
+
+\chapter{Étude de pré-projet}
+\input{existant} % Etude de l'existant
+\input{objectifs} % Objectifs du PdP
+
+\chapter{Analyse} % TODO: Trouver un meilleur nom
+\input{besoins} % Analyse des besoins
+\input{scenarii} % Scénarios d'utilisation
+
+\chapter{Mise en place} % TODO: trouver un meilleur nom
+\input{archi} % Architecture
+\input{implementation} % Choix d'implementation
+
+\chapter*{Conclusion}
+
+% TODO: Conclusion
+
+\backmatter
+
+% Bibliographie : désactiver pour l'instant
+% \bibliographystyle{plain}
+% \bibliography{memoire}
+
+% Liste des schémas
+\listoffigures
+
+\end{document}
