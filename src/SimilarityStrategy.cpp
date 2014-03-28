@@ -17,7 +17,9 @@ const int ARTIST_ID_WEIGHT = 1;
 */
 const int ALBUM_RELEASE_DATE_THRESHOLD = 5;
 
-float SimilarityStrategy::compute(Track track1, Track track2)
+SimilarityStrategy::SimilarityStrategy() {}
+
+float SimilarityStrategy::compute(Track track1, Track track2) const
 {
   float dRhythm = 1 - abs(track1.getRhythm() - track2.getRhythm());
   float dEnergy = 1 - abs(track1.getEnergy() - track2.getEnergy());
