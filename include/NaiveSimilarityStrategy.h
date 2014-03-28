@@ -1,9 +1,10 @@
 #ifndef NAIVESIMILARITYSTRATEGY_H
 #define NAIVESIMILARITYSTRATEGY_H 
 
+#include <ISimilarityStrategy.h>
 #include <Track.h>
 
-namespace Soundcity
+namespace SoundCity
 {
 
   /**
@@ -12,7 +13,7 @@ namespace Soundcity
   * sur le rythme
   */
 
-  class NaiveSimilarityStrategy : public ISimilarityStrategy{
+  class NaiveSimilarityStrategy : public ISimilarityStrategy {
   public: 
 
       /**
