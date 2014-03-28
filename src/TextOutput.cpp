@@ -4,16 +4,18 @@
 
 #include <TextOutput.h>
 
+using namespace SoundCity;
+
 void TextOutput::format(Playlist &playlist)
 {
   file.open("resultat.txt", std::ofstream::out | std::ofstream::app);
   assert(file.is_open());
 
-  for(auto i = Playlist.begin(); i != Playlist.end(); i++)
+  for(auto i = playlist.begin(); i != playlist.end(); i++)
   {
-  	file << *i.getTitle() << " - " << *i.getContextData().getArtist().getName()
-  		<< "(" << *i.getContextData().getAlbum().getName() << " - " <<
-  		*i.getContextData().getAlbum().getReleaseDate() << ")" << endl;
+  	file << i->getTitle() << " - " << i->getArtistName()
+  		<< "(" << i->getAlbumTitle() << " - " <<
+  		i->getAlbumReleaseDate() << ")" << std::endl;
 	}
 	file.close();
 }

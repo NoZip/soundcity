@@ -21,6 +21,8 @@ namespace SoundCity
     void format(Playlist &playlist);
     
   private:
-    ofstream file;
+    std::ofstream file;
   };
 }
+
+#endif //TEXTOUTPUT_H
