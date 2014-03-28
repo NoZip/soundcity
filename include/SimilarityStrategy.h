@@ -16,6 +16,7 @@ namespace SoundCity
   class SimilarityStrategy : public ISimilarityStrategy {
   public: 
 
+      SimilarityStrategy();
       /**
       * Permet de donner un score de similarité entre les
       * deux morceaux passés en paramètre à partir de leur
@@ -23,7 +24,7 @@ namespace SoundCity
       * @param track1 Premier morceaux à comparer
       * @param track2 Deuxième morceaux à comparer
       */
-      float compute(Track track1, Track track2);
+      float compute(Track track1, Track track2) const;
       
       };
 
