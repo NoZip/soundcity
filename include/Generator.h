@@ -40,8 +40,8 @@ namespace SoundCity
 
   private:
     IDatabase &db;
-    SelectionObservable selectionFeedback;
-    GenerationObservable generationFeedback;
+    //SelectionObservable selectionFeedback;
+    //GenerationObservable generationFeedback;
     const ISimilarityStrategy &similarity;
     
   };

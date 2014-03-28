@@ -3,6 +3,7 @@
 #include <OptionList.h>
 #include <TrackPool.h>
 #include <cassert>
+#include <iostream>
 
 using namespace SoundCity;
 const float SIMILARITY_THRESHOLD = 0.5;
@@ -10,13 +11,13 @@ const int POOL_SIZE_FACTOR = 10; //Taille de la pool en fonction de la taille de
 
 Generator::Generator(IDatabase &db, const ISimilarityStrategy &similarity) :
 similarity(similarity),
-selectionFeedback(),
-generationFeedback(),
+//selectionFeedback(),
+//generationFeedback(),
 db(db)
 {
   assert(&similarity);
-  assert(&selectionFeedback);
-  assert(&generationFeedback);
+  //assert(&selectionFeedback);
+  //assert(&generationFeedback);
   assert(&db);
 }
 
@@ -25,11 +26,11 @@ int Generator::initialization() const
   return db.initialization();
 }
 
-void generationLoop(Playlist playlist, TrackPool pool, std::size_t playlistSizeToReach, const ISimilarityStrategy &similarity)
+void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSizeToReach, const ISimilarityStrategy &similarity)
 {
   //On place le premier morceau de la pool dans la playlist
   Track poolFirstTrack = *pool.begin();
-  playlist.push_back(poolFirstTrack);
+  playlist->push_back(poolFirstTrack);
   pool.erase(poolFirstTrack);
 
   Track playlistLastTrack = poolFirstTrack; //Dernier morceau dans la playlist
@@ -37,7 +38,7 @@ void generationLoop(Playlist playlist, TrackPool pool, std::size_t playlistSizeT
   float playlistSimilarity = 0; //Initialisation du score de similarité de la playlist
 
   //Boucle de remplissage de la playlist
-  while(playlist.size() < playlistSizeToReach || pool.size() > 0)
+  while(playlist->size() < playlistSizeToReach || pool.size() > 0)
   {
     float maxSimilarityAtStart = 0;
     Track * bestTrackAtStart;
@@ -67,23 +68,23 @@ void generationLoop(Playlist playlist, TrackPool pool, std::size_t playlistSizeT
     //On ajoute le morceau le plus similaire à l'extrimité
     if(maxSimilarityAtStart > maxSimilarityAtEnd)
     {
-      playlist.push_front(*bestTrackAtStart);
+      playlist->push_front(*bestTrackAtStart);
       pool.erase(*bestTrackAtStart);
       playlistFirstTrack = *bestTrackAtStart;
       playlistSimilarity += maxSimilarityAtStart;
     }
     else
     {
-      playlist.push_back(*bestTrackAtEnd);
+      playlist->push_back(*bestTrackAtEnd);
       pool.erase(*bestTrackAtEnd);
       playlistLastTrack = *bestTrackAtEnd;
       playlistSimilarity += maxSimilarityAtEnd;
     }
   }
   //Vérification finale de la playlist
-  if(playlistSimilarity/playlist.size() > SIMILARITY_THRESHOLD && playlist.size() == playlistSizeToReach)
+  if(playlistSimilarity/playlist->size() > SIMILARITY_THRESHOLD && playlist->size() == playlistSizeToReach)
   {
-    playlist.setValid(1);
+    playlist->setValid(1);
   }
 }
 
@@ -95,7 +96,7 @@ Playlist Generator::generate(OptionList optionList)
   if(pool.size() == 0)
     return playlist;
   //On lance la génération
-  generationLoop(playlist, pool, optionList.getSize(), similarity);
+  generationLoop(&playlist, pool, optionList.getSize(), similarity);
   return playlist;
 }
 
@@ -110,6 +111,6 @@ Playlist Generator::regenerate(OptionList optionList, Playlist playlist)
     pool.insert(*it);
   Playlist newPlaylist;
   //On lance la génération
-  generationLoop(newPlaylist, pool, optionList.getSize(), similarity);
+  generationLoop(&newPlaylist, pool, optionList.getSize(), similarity);
   return newPlaylist;
 }
