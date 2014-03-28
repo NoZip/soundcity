@@ -9,7 +9,7 @@ Artist::Artist(int id, const std::string &name, float familiarity, float popular
 	familiarity(familiarity),
 	popularity(popularity)
 	{
-    assert(id);
+    //assert(id);
     assert(&name);
     assert(familiarity >= 0 && familiarity <= 1);
     assert(popularity >= 0 && popularity <= 1);
