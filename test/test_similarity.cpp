@@ -30,8 +30,9 @@ int main()
   assert(similarity.compute(track1, track1) == 1);
   cout << "similarity( track1, track1 ) == 1\n" << endl;
 
-  cout << similarity.compute(track1, track2) << " = similarity t1, t2\n" << endl;
-  cout << similarity.compute(track2, track3) << " = similarity t1, t3 \n" << endl;
+  cout << "similarity t1, t2 = "<< similarity.compute(track1, track2) << "\n" << endl;
+  cout << "similarity t2, t1 = "<< similarity.compute(track2, track1) << "\n" << endl;
+  cout << "similarity t1, t3 = "<< similarity.compute(track1, track3) << "\n" << endl;  
   //assert(similarity.compute(track1, track2) > similarity.compute(track1, track3));
   //cout << "similarity( track1, track 2 ) >  similarity( track1, track3 )" << endl;
 
