@@ -38,12 +38,12 @@ void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSiz
   float playlistSimilarity = 0; //Initialisation du score de similarité de la playlist
 
   //Boucle de remplissage de la playlist
-  while(playlist->size() < playlistSizeToReach || pool.size() > 0)
+  while(playlist->size() < playlistSizeToReach && pool.size() > 0)
   {
     float maxSimilarityAtStart = 0;
-    Track * bestTrackAtStart;
+    Track bestTrackAtStart = *pool.begin();
     float maxSimilarityAtEnd = 0;
-    Track * bestTrackAtEnd;
+    Track bestTrackAtEnd = *pool.begin();
     //Recherche du morceau à ajouter dans la pool
     for(auto it = pool.begin(); it != pool.end(); ++it)
     {
@@ -54,30 +54,30 @@ void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSiz
       if(similarityAtStart > maxSimilarityAtStart)
       {
         maxSimilarityAtStart = similarityAtStart;
-        bestTrackAtStart = &actual;
+        bestTrackAtStart = actual;
       }
       //Même opération que précédent avec le dernier morceau de la playlist
       float similarityAtEnd = similarity.compute(playlistLastTrack,actual);
       if(similarityAtEnd > maxSimilarityAtEnd)
       {
         maxSimilarityAtEnd = similarityAtEnd;
-        bestTrackAtEnd = &actual;
+        bestTrackAtEnd = actual;
       }
     }
 
-    //On ajoute le morceau le plus similaire à l'extrimité
+    //On ajoute le morceau le plus similaire à son extremité
     if(maxSimilarityAtStart > maxSimilarityAtEnd)
     {
-      playlist->push_front(*bestTrackAtStart);
-      pool.erase(*bestTrackAtStart);
-      playlistFirstTrack = *bestTrackAtStart;
+      playlist->push_front(bestTrackAtStart);
+      pool.erase(bestTrackAtStart);
+      playlistFirstTrack = bestTrackAtStart;
       playlistSimilarity += maxSimilarityAtStart;
     }
     else
     {
-      playlist->push_back(*bestTrackAtEnd);
-      pool.erase(*bestTrackAtEnd);
-      playlistLastTrack = *bestTrackAtEnd;
+      playlist->push_back(bestTrackAtEnd);
+      pool.erase(bestTrackAtEnd);
+      playlistLastTrack = bestTrackAtEnd;
       playlistSimilarity += maxSimilarityAtEnd;
     }
   }
