@@ -9,8 +9,8 @@ SelectionObservable::SelectionObservable()
 
 void SelectionObservable::notifyAll(std::size_t size, const TrackPool &pool)
 {
-  for (ISelectionObserver &observer : linkedObservers)
+  for (ISelectionObserver *observer : linkedObservers)
   {
-    observer.notify(size, pool);
+    observer->notify(size, pool);
   }
 }

@@ -13,8 +13,8 @@ void GenerationObservable::notifyAll(
   const Track &track
 )
 {
-  for (IGenerationObserver &observer : linkedObservers)
+  for (IGenerationObserver *observer : linkedObservers)
   {
-    observer.notify(index, size, track);
+    observer->notify(index, size, track);
   }
 }
