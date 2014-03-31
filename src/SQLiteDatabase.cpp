@@ -187,7 +187,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
     pool.insert(track);
   }
 
-  sqlite3_free(preparedRequest);
+  sqlite3_finalize(preparedRequest);
 
   return pool;
 }
