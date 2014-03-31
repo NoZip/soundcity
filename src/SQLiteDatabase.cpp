@@ -26,7 +26,6 @@ SQLiteDatabase::~SQLiteDatabase() {
 int SQLiteDatabase::initialization()
 {
   // @see http://www.sqlite.org/c3ref/open.html
-  std::cout << filename.c_str() << std::endl;
   int status = sqlite3_open_v2(
     filename.c_str(),
     &dbConnection,
@@ -112,13 +111,14 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
 
     whereBuffer << u8"albums.release BETWEEN "
                 << options.getStartYear()
-                << u8"AND"
+                << u8" AND "
                 << options.getEndYear()
                 << u8" ";
   }
 
 
   string whereRequest = whereBuffer.str();
+  std::cout << whereBuffer.str() << std::endl;
   if (!whereRequest.empty()) buffer << u8"WHERE " << whereRequest;
   buffer << u8"ORDER BY random() ";
   buffer << u8"LIMIT " << size << u8";";
@@ -186,6 +186,8 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
 
     pool.insert(track);
   }
+
+  sqlite3_free(preparedRequest);
 
   return pool;
 }

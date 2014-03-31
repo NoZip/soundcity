@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char * argv[])
 {
   SQLiteDatabase db(argv[1]);
-  OptionList options("", 0, 0, 0, 0, 0, 0, 10);
+  OptionList options("", 1980, 2010, 0, 0, 0, 0, 10);
   db.initialization();
   TrackPool pool = db.select(options, 10);
 
@@ -18,7 +18,6 @@ int main(int argc, char * argv[])
   for (const Track &track : pool)
   {
     cout << track.getTitle()
-         << " (" << track.getRhythm() << ", "
-         << track.getEnergy() << ")" << endl;
+         << " " << track.getContextData().getAlbum().getReleaseDate() << endl;
   }
 }
