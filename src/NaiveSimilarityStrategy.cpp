@@ -13,23 +13,19 @@ NaiveSimilarityStrategy::NaiveSimilarityStrategy() {}
 
 float NaiveSimilarityStrategy::compute(Track track1, Track track2) const
 {
-  float date1 = track1.getAlbumReleaseDate();
-  float date2 = track2.getAlbumReleaseDate();
-  float dAlbumReleaseDate = abs(date1 - date2);
+  int date1 = track1.getAlbumReleaseDate();
+  int date2 = track2.getAlbumReleaseDate();
+  int dAlbumReleaseDate = abs(date1 - date2);
 
   if(dAlbumReleaseDate == 0)
   {
-    dAlbumReleaseDate = 1;
+    return 1;
   }
-  else if(dAlbumReleaseDate <= ALBUM_RELEASE_DATE_THRESHOLD)
+  if(dAlbumReleaseDate <= ALBUM_RELEASE_DATE_THRESHOLD)
   {
-    dAlbumReleaseDate = DALBUM_RELEASE_DATE_THRESHOLD;
-  }
-  else
-  {
-    dAlbumReleaseDate = 0;
+    return DALBUM_RELEASE_DATE_THRESHOLD;
   }
 
-  return dAlbumReleaseDate;
+  return 0;
 }
 
