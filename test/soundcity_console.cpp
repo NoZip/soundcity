@@ -26,7 +26,7 @@ main(int argc, char *argv[])
   NaiveSimilarityStrategy similarity;
   SQLiteDatabase database(argv[1]);
   cout << "Crétation d'une liste d'options" << endl;
-  OptionList options("",0,0,0,0,0,0,10);
+  OptionList options("",1,3000,0,0,0,0,25);
   Generator generator(database, similarity);
 
   if(generator.initialization() == 0)
