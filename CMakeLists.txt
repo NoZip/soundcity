@@ -4,7 +4,7 @@ project (SoundCity)
 SET(CMAKE_CXX_FLAGS  "-std=c++11")
 
 include_directories( ${PROJECT_SOURCE_DIR}/include )
-
+link_directories( ${CMAKE_BINARY_DIR} )
 
 set(SOUNDCITY_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/Track.cpp
@@ -15,6 +15,7 @@ set(SOUNDCITY_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/OptionList.cpp
   ${PROJECT_SOURCE_DIR}/src/SQLiteDatabase.cpp
   ${PROJECT_SOURCE_DIR}/src/Generator.cpp
+  ${PROJECT_SOURCE_DIR}/src/NaiveSimilarityStrategy.cpp
   ${PROJECT_SOURCE_DIR}/src/SimilarityStrategy.cpp
   ${PROJECT_SOURCE_DIR}/src/Playlist.cpp)
 
