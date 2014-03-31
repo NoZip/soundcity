@@ -1,7 +1,7 @@
 #include <iostream>
 #include <OptionList.h>
 #include <SQLiteDatabase.h>
-#include <SimilarityStrategy.h>
+#include <NaiveSimilarityStrategy.h>
 #include <Generator.h>
 
 #define PARAMS 1
@@ -23,10 +23,10 @@ main(int argc, char *argv[])
   if (argc != PARAMS+1)
     usage(argv[0]);
 
-  SimilarityStrategy similarity;
+  NaiveSimilarityStrategy similarity;
   SQLiteDatabase database(argv[1]);
   cout << "Crétation d'une liste d'options" << endl;
-  OptionList options("",0,0,0,0,0,0,1);
+  OptionList options("",0,0,0,0,0,0,10);
   Generator generator(database, similarity);
 
   if(generator.initialization() == 0)
@@ -37,9 +37,9 @@ main(int argc, char *argv[])
   cout << "Lancement de la génération" << endl;
   Playlist playlist = generator.generate(options);
   cout << "Génération terminée" << endl;
-  cout << "Taille de la playlist générée : " << playlist.size() << endl;
   for(auto it = playlist.begin(); it != playlist.end(); ++it)
     cout << (*it).getTitle() << " - " << it->getArtistName() << " (" <<  it->getAlbumReleaseDate() << ")" << endl;
+  cout << "Taille de la playlist générée : " << playlist.size() << endl;
 
 
   return EXIT_SUCCESS;

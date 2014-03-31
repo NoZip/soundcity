@@ -35,6 +35,7 @@ set(sc_console_SRC
   ../src/SQLiteDatabase.cpp
   ../src/Generator.cpp
   ../src/SimilarityStrategy.cpp
+  ../src/NaiveSimilarityStrategy.cpp
   ../src/Playlist.cpp)
 
 add_executable(soundcity_console ${sc_console_SRC})
