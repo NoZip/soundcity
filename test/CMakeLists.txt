@@ -16,3 +16,13 @@ target_link_libraries(soundcity_console sqlite3)
 add_executable(test_similarity test_similarity.cpp)
 target_link_libraries(test_similarity soundcity)
 target_link_libraries(test_similarity sqlite3)
+
+# Tests unitaires
+enable_testing()
+
+add_executable(SQLiteTest SQLiteTest.cpp)
+target_link_libraries(SQLiteTest soundcity)
+target_link_libraries(SQLiteTest sqlite3)
+target_link_libraries(SQLiteTest cppunit)
+
+add_test(sqlite_test SQLiteTest)
