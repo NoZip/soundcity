@@ -1,3 +1,4 @@
+import sys
 import os
 import os.path
 import argparse
@@ -11,12 +12,15 @@ artist_id_count = 0
 
 TRACK_TABLE = """
 CREATE TABLE tracks (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
+    id_echonest TEXT NOT NULL,
+    id_7digital INTEGER NOT NULL,
     title TEXT NOT NULL,
     album_id INTEGER NOT NULL,
     artist_id INTEGER NOT NULL,
     duration FLOAT NOT NULL,
     popularity FLOAT NOT NULL,
+    genre TEXT,
     loudness INTEGER NOT NULL,
     tempo FLOAT NOT NULL,
     key INT NOT NULL,
@@ -25,27 +29,27 @@ CREATE TABLE tracks (
     mode_confidence FLOAT NOT NULL,
     rhythm FLOAT NOT NULL,
     energy FLOAT NOT NULL,
-    id_deezer INT,
     CONSTRAINT taa UNIQUE (title, album_id)
 )
 """
 ALBUM_TABLE = """
 CREATE TABLE albums (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
+    id_7digital INTEGER NOT NULL,
     title TEXT NOT NULL,
     artist_id INTEGER NOT NULL,
     release INTEGER NOT NULL,
-    id_deezer INT,
     CONSTRAINT aa UNIQUE (title, artist_id)
 )
 """
 ARTIST_TABLE = """
 CREATE TABLE artists (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
+    id_echonest TEXT NOT NULL,
+    id_7digital INTEGER NOT NULL,
     name TEXT NOT NULL UNIQUE,
     familiarity FLOAT NOT NULL,
-    popularity FLOAT NOT NULL,
-    id_deezer INT
+    popularity FLOAT NOT NULL
 )
 """
 
@@ -67,11 +71,14 @@ def add_track(sql_connection, track):
     sql_connection.execute("""
     INSERT INTO tracks VALUES (
         :id,
+        :id_echonest,
+        :id_7digital,
         :title,
         :album_id,
         :artist_id,
         :duration,
         :popularity,
+        :genre,
         :loudness,
         :tempo,
         :key,
@@ -79,8 +86,7 @@ def add_track(sql_connection, track):
         :mode,
         :mode_confidence,
         :rhythm,
-        :energy,
-        NULL
+        :energy
     )
     """, track)
 
@@ -98,10 +104,10 @@ def add_album(sql_connection, album):
     sql_connection.execute("""
     INSERT INTO albums VALUES (
         :id,
+        :id_7digital,
         :title,
         :artist_id,
-        :release,
-        NULL
+        :release
     )
     """, album)
 
@@ -119,10 +125,11 @@ def add_artist(sql_connection, artist):
     sql_connection.execute("""
     INSERT INTO artists VALUES (
         :id,
+        :id_echonest,
+        :id_7digital,
         :name,
         :familiarity,
-        :popularity,
-        NULL
+        :popularity
     )
     """, artist)
 
@@ -135,18 +142,15 @@ tracks = set()
 def verify_song(song):
     return (
         song["artist"]["name"]
-        and song["artist"]["familiarity"]
-        and not numpy.isnan(song["artist"]["familiarity"])
-        and song["artist"]["popularity"]
-        and not numpy.isnan(song["artist"]["popularity"])
+        and 0 <= song["artist"]["familiarity"] <= 1
+        and 0 <= song["artist"]["popularity"] <= 1
         and song["album"]["title"]
-        and song["album"]["release"]
+        #and song["album"]["release"]
         and song["track"]["title"]
-        and song["track"]["duration"]
-        and song["track"]["popularity"]
-        and not numpy.isnan(song["track"]["popularity"])
+        and song["track"]["duration"] > 0
+        and 0 <= song["track"]["popularity"] <= 1
         and song["track"]["loudness"]
-        and song["track"]["tempo"]
+        and song["track"]["tempo"] > 0
         #and song["track"]["key_confidence"] > 0.5
         #and song["track"]["mode_confidence"] > 0.6
     )
@@ -165,95 +169,134 @@ def compute_score(value, min, max, f=None):
 
     return score
 
+def saturate(value):
+    if value < 0:
+        return 0
+    elif value > 1:
+        return 1
+
+    return value 
+
+def parse_artists_file(artists_file):
+    i = 0
+    artists = {}
+
+    for line in artists_file:
+        echonest_id, mb_id, track_id, name = line.split("<SEP>")
+        artists[echonest_id] = i
+        i += 1
+
+    return artists
+
 def analyse_file(sql_connection, path):
     data = tables.open_file(path)
+
     global tracks_id_count
-    for metadata, musicbrainz, analysis in zip(
-        data.root.metadata.songs[:],
-        data.root.musicbrainz.songs[:],
-        data.root.analysis.songs[:]
-    ):
-        song = dict(
-            artist = dict (
-                name = metadata["artist_name"].decode(),
-                familiarity = metadata["artist_familiarity"] \
-                    if not numpy.isnan(metadata["artist_familiarity"]) else 0,
-                popularity = metadata["artist_hotttnesss"] \
-                    if not numpy.isnan(metadata["artist_hotttnesss"]) else 0
-            ),
-            album = dict (
-                title = metadata["release"].decode(),
-                release = int(musicbrainz["year"])
-            ),
-            track = dict(
-                title = metadata["title"].decode(),
-                duration = analysis["duration"],
-                popularity = metadata["song_hotttnesss"] \
-                    if not numpy.isnan(metadata["song_hotttnesss"]) else 0,
-                loudness = analysis["loudness"],
-                tempo = analysis["tempo"],
-                key = int(analysis["key"]),
-                key_confidence = analysis["key_confidence"] \
-                    if not numpy.isnan(analysis["key_confidence"]) else 0,
-                mode = int(analysis["mode"]),
-                mode_confidence = analysis["mode_confidence"] \
-                    if not numpy.isnan(analysis["mode_confidence"]) else 0,
-            )
-        )
 
-        print("Analyse de", song["track"]["title"], "par", song["artist"]["name"])
+    metadata = data.root.metadata.songs[0]
+    musicbrainz = data.root.musicbrainz.songs[0]
+    analysis = data.root.analysis.songs[0]
+    similar_artists = data.root.metadata.similar_artists
 
-        # Adds an artist if not in database
-        if song["artist"]["name"] not in artists:
-            artist = dict(
-                name = song["artist"]["name"],
-                familiarity = song["artist"]["familiarity"],
-                popularity = song["artist"]["popularity"]
-            )
-            add_artist(sql_connection, artist)
-            artists[artist["name"]] = artist["id"]
-
-        artist_id = artists[song["artist"]["name"]]
-
-        # Adds an album if not in database
-        if (song["album"]["title"], artist_id) not in albums:
-            album = dict(
-                title = song["album"]["title"],
-                artist_id = artist_id,
-                release = song["album"]["release"]
-            )
-            add_album(sql_connection, album)
-            albums[(album["title"], album["artist_id"])] = album["id"]
-
-        album_id = albums[(song["album"]["title"], artist_id)]
-
+    song = dict(
+        artist = dict (
+            id_echonest = metadata["artist_id"],
+            id_7digital = int(metadata["artist_7digitalid"]),
+            name = metadata["artist_name"].decode(),
+            familiarity = saturate(metadata["artist_familiarity"]) \
+                if not numpy.isnan(metadata["artist_familiarity"]) else 0,
+            popularity = saturate(metadata["artist_hotttnesss"]) \
+                if not numpy.isnan(metadata["artist_hotttnesss"]) else 0
+        ),
+        album = dict (
+            id_7digital = int(metadata["release_7digitalid"]),
+            title = metadata["release"].decode(),
+            release = int(musicbrainz["year"])
+        ),
         track = dict(
-            title = song["track"]["title"],
-            album_id = album_id,
-            artist_id = artist_id,
-            duration = song["track"]["duration"],
-            popularity = song["track"]["popularity"],
-            loudness = song["track"]["loudness"],
-            tempo = song["track"]["tempo"],
-            key = song["track"]["key"],
-            key_confidence = song["track"]["key_confidence"],
-            mode = song["track"]["mode"],
-            mode_confidence = song["track"]["mode_confidence"],
-            rhythm=compute_score(song["track"]["tempo"], 40, 200),
-            energy=compute_score(song["track"]["loudness"]+60, 20, 100)
+            id_echonest = analysis["track_id"],
+            id_7digital = int(metadata["track_7digitalid"]),
+            title = metadata["title"].decode(),
+            duration = analysis["duration"],
+            popularity = saturate(metadata["song_hotttnesss"]) \
+                if not numpy.isnan(metadata["song_hotttnesss"]) else 0,
+            genre = metadata["genre"],
+            loudness = analysis["loudness"],
+            tempo = analysis["tempo"],
+            key = int(analysis["key"]),
+            key_confidence = analysis["key_confidence"] \
+                if not numpy.isnan(analysis["key_confidence"]) else 0,
+            mode = int(analysis["mode"]),
+            mode_confidence = analysis["mode_confidence"] \
+                if not numpy.isnan(analysis["mode_confidence"]) else 0,
         )
+    )    
 
-        if (track["title"], track["album_id"]) in tracks:
-            print("Track already in database")
-            break
+    print("Analyse de", song["track"]["title"], "par", song["artist"]["name"])
 
-        try:
-            add_track(sql_connection, track)
-            tracks.add((track["title"], track["album_id"]))
-        except Exception as e:
-            print(e)
-            print(track)
-            continue
+    if not verify_song(song):
+        print("Reject", file=sys.stderr)
+        print(song, file=sys.stderr)
+        data.close()
+        return
+
+    # Adds an artist if not in database
+    if song["artist"]["name"] not in artists:
+        artist = dict(
+            id_echonest = song["artist"]["id_echonest"],
+            id_7digital = song["artist"]["id_7digital"],
+            name = song["artist"]["name"],
+            familiarity = song["artist"]["familiarity"],
+            popularity = song["artist"]["popularity"]
+        )
+        add_artist(sql_connection, artist)
+        artists[artist["name"]] = artist["id"]
+
+    artist_id = artists[song["artist"]["name"]]
+
+    # Adds an album if not in database
+    if (song["album"]["title"], artist_id) not in albums:
+        album = dict(
+            id_7digital = song["album"]["id_7digital"],
+            title = song["album"]["title"],
+            artist_id = artist_id,
+            release = song["album"]["release"]
+        )
+        add_album(sql_connection, album)
+        albums[(album["title"], album["artist_id"])] = album["id"]
+
+    album_id = albums[(song["album"]["title"], artist_id)]
+
+    track = dict(
+        id_echonest = song["artist"]["id_echonest"],
+        id_7digital = song["artist"]["id_7digital"],
+        title = song["track"]["title"],
+        album_id = album_id,
+        artist_id = artist_id,
+        duration = song["track"]["duration"],
+        popularity = song["track"]["popularity"],
+        genre = song["track"]["genre"],
+        loudness = song["track"]["loudness"],
+        tempo = song["track"]["tempo"],
+        key = song["track"]["key"],
+        key_confidence = song["track"]["key_confidence"],
+        mode = song["track"]["mode"],
+        mode_confidence = song["track"]["mode_confidence"],
+        rhythm=compute_score(song["track"]["tempo"], 40, 200),
+        energy=compute_score(song["track"]["loudness"]+60, 20, 100)
+    )
+
+    if (track["title"], track["album_id"]) in tracks:
+        print("Track already in database")
+        data.close()
+        return
+
+    try:
+        add_track(sql_connection, track)
+        tracks.add((track["title"], track["album_id"]))
+    except Exception as e:
+        print(e)
+        print(track)
 
     data.close()
 
@@ -276,7 +319,11 @@ if __name__ == "__main__":
     )
     options = options_parser.parse_args()
 
+    # artists = None
+    with open(options.msd_directory + "AdditionalFiles/subset_unique_artists.txt", "r") as artists_file:
+        artists = parse_artists_file(artists_file)
+
     sql_connection = sqlite3.connect(options.database_name + ".sqlite")
     create_tables(sql_connection)
-    analyse_dir(sql_connection, options.msd_directory)
+    analyse_dir(sql_connection, options.msd_directory + "data/")
     sql_connection.close()
