@@ -63,8 +63,6 @@ enum RowIndex {
   SIGNAL_TONALITY
 };
 
-const float POPULARITY_THRESHOLD = 0.1f;
-
 TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
 {
   stringstream buffer;
@@ -119,7 +117,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   }
 
   // Popularity filtering : use artist familiarity
-  if (options.getPopularity())
+  if (options.getPopularity() > 0.f)
   {
     if (firstWhere)
       firstWhere = false;
@@ -139,6 +137,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   buffer << u8"LIMIT " << size << u8";";
 
   string request = buffer.str();
+  // std::cout << request << std::endl; 
 
   // Request compilation
   sqlite3_stmt *preparedRequest = nullptr;

@@ -12,6 +12,8 @@
 namespace SoundCity
 {
 
+const float POPULARITY_THRESHOLD = 0.1f;
+
 /**
  * Module de base de données SQLite.
  */
