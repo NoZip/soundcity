@@ -53,10 +53,18 @@ CREATE TABLE artists (
 )
 """
 
+ARTIST_SIMILARITY_TABLE = """
+CREATE TABLE artists_similarity (
+    target TEXT,
+    similar TEXT
+)
+"""
+
 def create_tables(sql_connection):
     sql_connection.execute(TRACK_TABLE)
     sql_connection.execute(ALBUM_TABLE)
     sql_connection.execute(ARTIST_TABLE)
+    sql_connection.execute(ARTIST_SIMILARITY_TABLE)
     sql_connection.commit()
 
 def add_track(sql_connection, track):
@@ -90,7 +98,7 @@ def add_track(sql_connection, track):
     )
     """, track)
 
-    sql_connection.commit()
+    # sql_connection.commit()
 
 def add_album(sql_connection, album):
     "Add an album to the sqlite database"
@@ -111,7 +119,7 @@ def add_album(sql_connection, album):
     )
     """, album)
 
-    sql_connection.commit()
+    # sql_connection.commit()
 
 def add_artist(sql_connection, artist):
     "Add an artist to the sqlite database"
@@ -133,7 +141,11 @@ def add_artist(sql_connection, artist):
     )
     """, artist)
 
-    sql_connection.commit()
+    # sql_connection.commit()
+
+def add_similar_artist(sql_connection, target, similar):
+    sql_connection.execute("INSERT INTO artists_similarity VALUES (?, ?)", (target, similar))
+    # sql_connection.commit()
 
 albums = {}
 artists = {}
@@ -175,18 +187,7 @@ def saturate(value):
     elif value > 1:
         return 1
 
-    return value 
-
-def parse_artists_file(artists_file):
-    i = 0
-    artists = {}
-
-    for line in artists_file:
-        echonest_id, mb_id, track_id, name = line.split("<SEP>")
-        artists[echonest_id] = i
-        i += 1
-
-    return artists
+    return value
 
 def analyse_file(sql_connection, path):
     data = tables.open_file(path)
@@ -252,6 +253,10 @@ def analyse_file(sql_connection, path):
         add_artist(sql_connection, artist)
         artists[artist["name"]] = artist["id"]
 
+        #add similar artists
+        for similar in similar_artists:
+            add_similar_artist(sql_connection, artist["id_echonest"], similar)
+
     artist_id = artists[song["artist"]["name"]]
 
     # Adds an album if not in database
@@ -307,6 +312,8 @@ def analyse_dir(sql_connection, path):
         elif os.path.isdir(path + '/' + entry):
             analyse_dir(sql_connection, path + '/' + entry)
 
+    # sql_connection.commit()
+
 if __name__ == "__main__":
     options_parser = argparse.ArgumentParser()
     options_parser.add_argument(
@@ -319,11 +326,12 @@ if __name__ == "__main__":
     )
     options = options_parser.parse_args()
 
-    # artists = None
-    with open(options.msd_directory + "AdditionalFiles/subset_unique_artists.txt", "r") as artists_file:
-        artists = parse_artists_file(artists_file)
-
     sql_connection = sqlite3.connect(options.database_name + ".sqlite")
+    sql_connection.execute("DROP TABLE IF EXISTS tracks")
+    sql_connection.execute("DROP TABLE IF EXISTS albums")
+    sql_connection.execute("DROP TABLE IF EXISTS artists")
+    sql_connection.execute("DROP TABLE IF EXISTS artists_similarity")
     create_tables(sql_connection)
     analyse_dir(sql_connection, options.msd_directory + "data/")
+    sql_connection.commit()
     sql_connection.close()
