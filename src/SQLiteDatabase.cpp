@@ -63,6 +63,8 @@ enum RowIndex {
   SIGNAL_TONALITY
 };
 
+const float POPULARITY_THRESHOLD = 0.1f;
+
 TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
 {
   stringstream buffer;
@@ -109,16 +111,29 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
     else
       whereBuffer << "AND ";
 
-    whereBuffer << u8"albums.release BETWEEN "
+    whereBuffer << "( " << u8"albums.release BETWEEN "
                 << options.getStartYear()
                 << u8" AND "
                 << options.getEndYear()
-                << u8" ";
+                << u8" ) ";
   }
 
+  // Popularity filtering : use artist familiarity
+  if (options.getPopularity())
+  {
+    if (firstWhere)
+      firstWhere = false;
+    else
+      whereBuffer << "AND ";
+
+    whereBuffer << "( " << u8"abs("
+                << options.getPopularity()
+                << u8" - artists.familiarity ) < "
+                << POPULARITY_THRESHOLD
+                << u8" ) ";
+  }
 
   string whereRequest = whereBuffer.str();
-  std::cout << whereBuffer.str() << std::endl;
   if (!whereRequest.empty()) buffer << u8"WHERE " << whereRequest;
   buffer << u8"ORDER BY random() ";
   buffer << u8"LIMIT " << size << u8";";
