@@ -1,4 +1,3 @@
-\newpage
 \section{Analyse des besoins fonctionnels}
 \label{besoins:fonc}
 
@@ -12,7 +11,8 @@ selon des paramètres choisis par l’utilisateur. Cette génération se décomp
 \label{besoins:fonc:generation:selection}
 
 Durant l’étape de sélection, le programme doit être capable de choisir un ensembles
-morceaux correspondant à un certain nombre de critères, tous étant optionnels, cette ensemble s'appelle la Pool de morceaux.
+morceaux correspondant à un certain nombre de critères, tous étant optionnels, 
+cette ensemble s'appelle la Pool de morceaux.
 Dans le cas où aucun des paramètres optionnels n’est fixé, les pistes
 sélectionnées doivent êtres aléatoires.
 
@@ -35,14 +35,21 @@ n’est pas nécessairement une donnée basée sur le signal, le client peut tr�
 donner cette information en recueillant des avis d’utilisateurs).
 \end{description}
 
-Ces informations sont considérées exactes dans la base de données, elle sont toutes stockées dans des nombres flottant allant de 0 à 1, libre au créateur d'un nouvelle base de données d'imposer sa convention pour le calcul de ces valeurs.
+Ces informations sont considérées exactes dans la base de données, elles sont 
+toutes stockées dans des nombres flottant allant de 0 à 1, 
+libre au créateur d'un nouvelle base de données d'imposer sa convention pour le calcul de ces valeurs.
 
 \subsubsection{Ordonnancement: Similarité entre les morceaux}
 \label{besoins:fonc:generation:selection:ordonnancement}
 
-Durant l'ordonnancement, les morceaux placés dans la Pool de morceaux doivent être agencés en respectant une cohérence, mais aussi une variété. Un score de similarité doit donc pouvoir être calculé entre les morceaux pour choisir celui qui convient le mieux.
+Durant l'ordonnancement, les morceaux placés dans la Pool de morceaux doivent être 
+agencés en respectant une cohérence, mais aussi une variété. 
+Un score de similarité doit donc pouvoir être calculé entre les morceaux pour 
+choisir celui qui convient le mieux.
 
-Ce calcul de similarité doit pouvoir donner un score de similarité entre 2 morceaux. Une playlist cohérente est donc une playlist dans laquelle chaque morceau doit avoir un score de similarité élevé avec le morceau qui le précède.
+Ce calcul de similarité doit pouvoir donner un score de similarité entre 2 morceaux. 
+Une playlist cohérente est donc une playlist dans laquelle chaque morceau doit 
+avoir un score de similarité élevé avec le morceau qui le précède.
 
 \subsection{Visualisation de la playlist}
 \label{besoins:fonc:generation:visu}
@@ -68,8 +75,6 @@ d’envoyer un feedback des actions réalisées par le programme à l’utilisat
 faudra donc utiliser un système nous permettant de visualiser l’avancement de la
 génération.
 
-\newpage
-
 \section{Analyse des besoins non fonctionnels}
 \label{besoins:nfonc}
 
@@ -88,7 +93,11 @@ Nous avons donc décidé de limiter le nombre de morceaux sur lesquels faire nos
 calculs et notre ordonnancement, les morceaux sélectionnés étant un sous ensemble
 plus petit des morceaux correspondant aux critères choisis. Notre convention est
 donc de limiter ce sous ensemble de pré-sélection à 10 fois la taille de playlist
-demandée par l’utilisateur, ainsi pour une génération de 15 morceaux, une préselection de 150 morceaux sera faite et la génération sera effectuée depuis uniquement ces morceaux.
+demandée par l’utilisateur, ainsi pour une génération de 15 morceaux, une 
+préselection de 150 morceaux sera faite et la génération sera effectuée depuis uniquement ces morceaux.
+Ce système permet de limiter la complexité d'une génération. Chaque morceau de
+la pool est comparé à tous les autres à chaque insertion de nouveau track dans la 
+playlist, la complexité est donc de \[O(n) = n*(n*10)\], n étant la taille de la playlist générée.
 
 \subsection{Modularité}
 \label{besoins:nfonc:perf:mod}
@@ -99,18 +108,22 @@ remplaçables à souhait. Pour cela, le programme sera séparé en 4 modules~:
 \subsubsection{Module d'Interface Utlisateur}
 \label{besoins:nfonc:perf:mod:iu}
 
-(c.f. Section \ref{sec:interface})
+(c.f. Section \ref{besoins:fonc:generation:feedback})
 
 \subsubsection{Module de génération de playlist}
 \label{besoins:nfonc:perf:mod:generator}
 
 Le module est chargé de générer la liste de morceaux en fonction d’un panel de
-descripteurs de morceaux et de paramètres.
+descripteurs de morceaux et de paramètres, il s'agit de la partie d'ordonancement. 
+Il est lié au modules de données (c.f. Section \ref{besoins:nfonc:perf:mod:data}) 
+qui se chargera de la selection des morceaux.
 
 \subsubsection{Statégie de similarité}
 \label{besoins:nfonc:perf:mod:similarity}
 
-Ce module utilisera le pattern Strategy pour le rendre interchangeable. Cette classe contiendra une fonction qui calculera le score de similarité entre deux morceaux passés en paramètres, elle sera appellée uniquement par le générateur.
+Ce module utilisera le pattern Strategy pour le rendre interchangeable. 
+Cette classe contiendra une fonction qui calculera le score de similarité entre 
+deux morceaux passés en paramètres, elle sera appellée uniquement par le générateur.
 
 \subsubsection{Module de données}
 \label{besoins:nfonc:perf:mod:data}
@@ -128,8 +141,8 @@ il en faut au minimum une. Cette partie se charge de convertir puis de rendre à
 l’utilisateur la playlist (déjà générée par le module de génération) à son format
 propre.
 
-\begin{figure}[!h]
-\includegraphics[width=14cm]{modules.png}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/besoins/modules.png}
 \caption{Les 4 modules indispensables au bon fonctionnement du programme et leurs
 interactions.}
 \end{figure}
