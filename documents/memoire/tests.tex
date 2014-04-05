@@ -29,16 +29,24 @@ est une réussite.
 \subsubsection{Filtrage par popularité}
 \label{tests:unitaires:sqlite:popularite}
 
-% TODO
+Ce test vérifie si le filtrage par popularité fonctionne. La popularité choisie 
+pour la sélection est de 0.8, car c'est le seuil à partir duquel les artistes
+assez connus apparaissent. Après la sélection, on vérifie si tous les morceaux
+de l'ensemble sélectionné on une popularité correspondante au facteur de
+filtrage. Si tous les morceaux ont une popularité valide, le test est une
+réussite.
 
 \section{Tests de qualité de la playlist}
 \label{tests:qualite}
 
+
 La qualité d'une playlist est très subjective. Cependant dans notre projet cette
 qualité est assuré par notre algorithme de similarité. Il fallait donc des tests
-pour attester de la qualité de cette similarité. Les test qui vont suivre ne
-sont pas des test binaires (seulement réussit ou raté), mais des outils
-permettant d'analyser la qualité d'un algorithme de similarité.
+pour attester de la qualité de cette similarité. Les test qui vont suivre
+\footnote{Ces test n'ont pas pu être implémentés faute de temps, mais nous
+pensions qu'il était intéressant de noter leur méthodologie} ne sont pas des
+test binaires (seulement réussit ou raté), mais des outils permettant d'analyser 
+la qualité d'un algorithme de similarité.
 
 \subsection{Test de cohérence : Technique du «~Grand Fossé~»}
 \label{tests:qualite:coherence-fosse}
@@ -65,6 +73,11 @@ différents selon les critères suivant~:
 \end{itemize}
 
 \end{description}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{data/tests/test-coherence-fosse.png}
+\caption{Schéma de principe du test de cohérence.}
+\end{figure}
 
 Après avoir généré ces deux ensemble de morceaux, il suffit de générer une
 playlist avec la base de donnée résultante. Si des morceaux des deux ensembles
@@ -114,6 +127,11 @@ vide entre les deux ensembles extrêmes~:
   \item rythme entre 0.2 et 0.75
   \item énergie entre 0.35 et 0.85
 \end{itemize}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{data/tests/test-variation-passerelle.png}
+\caption{Schéma de principe du test de variation.}
+\end{figure}
 
 Tout l'enjeu du test est qu'une playlist qui commence par un morceau du premier
 ensemble extrême contienne un morceau de l'autre ensemble extrême, le troisième
