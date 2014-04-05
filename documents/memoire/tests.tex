@@ -74,7 +74,7 @@ différents selon les critères suivant~:
 
 \end{description}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=\textwidth]{data/tests/test-coherence-fosse.png}
 \caption{Schéma de principe du test de cohérence.}
 \end{figure}
@@ -128,7 +128,7 @@ vide entre les deux ensembles extrêmes~:
   \item énergie entre 0.35 et 0.85
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=\textwidth]{data/tests/test-variation-passerelle.png}
 \caption{Schéma de principe du test de variation.}
 \end{figure}
@@ -157,3 +157,43 @@ Cependant, cette fois ci le score doit prendre en compte deux événements~:
 Le meilleur moyen de conduire ce test est encore une fois de le répéter. On
 obtiens ainsi une moyenne des rangs d'atteinte de la passerelle et de ceux
 d'atteinte de l'autre extrême.
+
+\subsection{Test de comparaison de similarité}
+\label{tests:qualite:comparaison}
+
+Ce test vise a fournir une visualisation des variations de comparaisons entre
+les morceaux d'une playlist générée. Tout d'abord, on génère une playlist grâce
+au générateur. On compare les morceaux de la façon suivante~: on calcule la
+similarité entre une piste (indice $k$) et la piste suivante (indice $k+1$),
+et on la compare à la similarité entre la piste au n-ième rang précédent
+(indice $k-n$) et la piste suivante (indice $k+1$). Ce qui nous donne la
+formule suivante ($\Delta{}sim_{n}$ étant la différence de similarité pour un
+rang n)~:
+
+\begin{itemize}
+  \item $n \in \mathbb{N}^{*}$, le rang du morceau précédent.
+  \item $k \in \mathbb{N}$ et $k \geq n$
+  \item $T_{k}$ designant le k-ième morceau de la playlist.
+\end{itemize}
+
+\begin{equation*}
+  \Delta{}sim_{n}(k) = |sim(T_{k-n}, T_{k+1}) - sim(T_{k}, T_{k+1})|
+\end{equation*}
+
+En faisant varier le rang n on peut observer les variation pour des morceaux
+plus éloignés. Un rang de 1 comparera la piste courante avec la piste la
+précédant.
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/tests/test-comparaison.png}
+\caption{Illustration du système de comparaison pour différentes valeurs de n}
+\end{figure}
+
+Avec les résultats de cette fonction de comparaison, on peut calculer la
+distance de similarité pour tout k. On obtient donc ainsi un graphe, construit
+avec GNUPlot par exemple, qui nous montre les variations de similarité. Ce
+graphe permet de visualiser les mauvais enchaînements de morceaux, car la valeur
+de la fonction $\Delta{}sim_{n}$ sera élevée lors de ces transitions violentes.
+De plus, il est intéressant de superposer plusieurs de ces graphes présentant un
+rang n différent. On peut ainsi distinguer à partir de quelle rang la cohérence
+disparaît.
