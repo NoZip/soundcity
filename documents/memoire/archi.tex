@@ -6,59 +6,55 @@
 \label{archi:modules:iu}
 
 L'Interface Utilisateur (UserInterface) se charge de faire le lien entre
-l'utilisateur et le programme, ses fonctions principales sont de lancer une
-génération en appelant la fonction generate du module de génération. Lors
-de l'appel à cette fonction, les paramètres entrés par l'utilisateur sont
-transmis en paramètres. Lors du lancement du programme, une fonction
-d'initialisation est lancée, elle permet d'assurer la présence de la Base de
-Données et du/des modules de sortie.
+l'utilisateur et le programme. Sa fonction principale est de lancer une
+génération de playlist en appelant la fonction generate() du module de 
+génération. Lors de l'appel à cette fonction, les informations rentrées par 
+l'utilisateur sont transmises en paramètres. Lors du lancement du programme,
+ une fonction d'initialisation est lancée. Cette dernière permet d'assurer 
+ la présence de la Base de Données ainsi que du, ou des, module(s) de sortie.
 
 \subsection{Générateur}
 \label{archi:modules:generateur}
 
-Le module de génération (caractérisé par 3 sous-modules: Generator, 
-SimilarityEngine et FeedbackEngine) s'occupe de faire la génération de
-playlist. Toutes les fonctions du sous-module Generator sont appelées par
-l'interface utilisateur, et celui-ci appelle toutes les fonctions des deux
-autres sous-modules. La fonction initialization sert à vérifier la présence de
-base de données au démarrage du programme. 
+Le module de génération (lui-même composé de 3 sous-modules: Generator, 
+SimilarityEngine et FeedbackEngine) s'occupe de la création de la playlist. 
+L'interface utilisateur appelle toutes les fonctions du sous-module 
+Generator, et celui-ci appelle à son tour toutes les fonctions des deux 
+autres sous-modules. La fonction initialization() sert à vérifier la 
+présence de base de données lors du démarrage du programme. 
 
-La fonction generate sert à générer la playlist en fonction des options passées 
-par l'interface utilisateur, cette fonction fera un appel à la fonction
-select du module de données pour récupérer un ensemble fini de morceaux. La 
-fonction regenerate est utilisée dans le cas particulier ou l'utilisateur se 
-voit proposer de faire une re-génération dans le cas où la génération précédente 
-est jugée non satisfaisante (voir le dossier d'Analyse de besoins). Cette 
-fonction prend donc les options en paramètres et récupère la précèdente playlist 
-générée pour l'améliorer.
+La fonction generate() sert à générer la playlist d'après les options 
+passées via l'interface utilisateur. Elle effectuera un appel à la fonction 
+select() du module de données afin de récupérer un ensemble fini de morceaux.
+ La fonction regenerate() est utilisée dans la situation particulière où 
+ l'utilisateur se voit proposer de faire une nouvelle génération dans le cas 
+ où la génération précédente est jugée non satisfaisante (voir le dossier 
+ d'Analyse de besoins). Cette fonction prend donc les options en paramètres 
+ et récupère la précèdente playlist générée dans le but de l'améliorer.
 
-Le similarityEngine sert à calculer la similarité entre deux 
-morceaux afin de vérifier la validité de la playlist. Le feedback engine 
-permet de communiquer avec l'interface utilisateur afin d'apporter un visuel 
-de la génération en cours pour aider l'utilisateur à patienter.
+Le sous-module SimilarityEngine sert à calculer la similarité entre deux 
+morceaux afin de vérifier la cohérence et la validité de la playlist. Le 
+sous-module FeedbackEngine permet de communiquer avec l'interface 
+utilisateur pour apporter un visuel de la progression de la génération afin 
+d'informer l'utilisateur de l'avancement de la création, et l'aider à 
+patienter.
 
 \subsection{Module de données}
 \label{archi:modules:donnees}
 
-Le module de données (SQLiteDatabase) a pour objectif d'assurer la communication 
-entre le module de génération et la base de données utilisée. Sa principale 
-fonctionnalité est de réaliser une séléction dans la base de données selon le 
-nombre de chansons souhaitées et les paramètres de séléction entrés par 
-l'utilisateur, cette opération se fait par la fonction select.
-De plus, lors du lancement du programme une fonction d'initialisation est 
-appellée afin de certifier la présence de la Base de Données.
+Le module de données (SQLiteDatabase) a pour objectif d'assurer la communication entre le module de génération et la base de données utilisée. Sa principale fonctionnalité est d'effectuer une séléction dans la base de données en fonction du nombre de chansons souhaité et des paramètres de séléction entrés par l'utilisateur. Cette opération se fait grâce à la fonction select(). De plus, lors du lancement du programme, une fonction d'initialisation est appellée afin de certifier la présence de la base de données.
 
 \subsection{Module de sortie}
 \label{archi:modules:sortie}
 
-Le module de sortie (ici TextFormatter) est en charge de fournir à 
-l'utilisateur un moyen de récuperer le résultat de la génération demandée. Ce 
-module (ainsi que tous les modules de sortie pouvant être crées) devront 
-respecter l'interface Formatter, pour pouvoir être utilisé sur le programme. 
-Dans le cas du module TextFormater le résultat obtenu sera mis sous la forme 
-d'un fichier texte contenant les titres des différents morceaux de la playlist. 
-Cette fontionnalité est assurée par la fonction format à laquelle on passe la 
-playlist générée en paramètre.
+Le module de sortie (ici TextOutput) est en charge de fournir à 
+l'utilisateur un moyen de récuperer le résultat de la génération demandée. 
+Ce module (ainsi que tous les modules de sortie pouvant être crées) devront 
+respecter l'interface OutputStrategy pour pouvoir être utilisés sur le 
+programme. Dans le cas du module TextOutput, le résultat obtenu sera mis 
+sous la forme d'un fichier texte contenant les titres des différents 
+morceaux de la playlist. Cette fontionnalité est assurée par la fonction 
+format() à laquelle on passe la playlist générée en paramètre.
 
 \section{Structures de données}
 \label{archi:structures}
@@ -66,60 +62,67 @@ playlist générée en paramètre.
 \subsection{Morceau}
 \label{archi:structures:morceau}
 
-Un morceau (Track) est la structure principale du programme, elle peut être 
-utilisée tant pour décrire un morceau que pour décrire des paramètres 
-(certains paramètres seront utilisés uniquement dans le premier cas). Les 
-paramètres sont triés dans deux sous-sections (signal\_data et context\_data) 
-pour un soucis de visibilité à l'exception d'un id qui concerne l'identifiant 
-dans la base de données du morceau (utilisé pour éviter des duplications).
+Un morceau (Track) est la structure principale du programme. Cette dernière 
+peut être utilisée tant pour décrire un morceau que pour décrire des 
+paramètres (certains paramètres seront utilisés uniquement dans le premier 
+cas). Les paramètres sont triés dans deux sous-sections (signal\_data et 
+context\_data) dans un soucis de visibilité, à l'exception d'un \textit{id} 
+qui concerne l'identifiant dans la base de données du morceau (utilisé pour 
+éviter des duplications).
 
 \subsubsection{Données signal}
 \label{archi:structures:morceau:signal}
 
-Les données signal, représentées par la structure SignalData, sont l'ensemble 
-des valeurs correspondant aux déscripteurs audio du morceau à savoir: le rythme, 
-l'énergie et la tonalité (rythme, energy et tonality). Ces valeurs sont 
-exprimées par des floats compris entre 0 et 1.
+Les données signal, représentées par la structure SignalData, sont 
+l'ensemble des valeurs correspondant aux déscripteurs audio du morceau, à 
+savoir: le rythme, l'énergie et la tonalité (\textit{rythme}, \textit{energy}
+ et \textit{tonality}). Ces valeurs sont exprimées par des nombres flottants 
+ compris entre 0 et 1.
 
 \subsubsection{Données de contexte}
 \label{archi:structures:morceau:contexte}
 
-Les données de contexte sont représentées par la structure ContextData. Cette 
-structure contient les informations sur le morceaux qui ne sont pas relatives 
-au signal, c'est à dire qui décrivent le contexte culturel du morceau. Ces 
-informations sont un score de popularité compris entre 0 et 1, l'artiste qui 
-en est à l'origine et l'album sur lequel il se trouve.
+Les données de contexte sont représentées par la structure ContextData, qui 
+contient les informations sur le morceau qui ne sont pas relatives au 
+signal : elles décrivent le contexte culturel du morceau. Ces informations 
+sont :  un score de popularité exprimé par un nombre flottant compris entre 
+0 et 1, l'artiste qui est à l'origine du morceau et l'album sur lequel il 
+se trouve.
 
 \subsubsection{Informations sur l'artiste et l'album}
 \label{archi:structures:morceau:artiste}
 
-Les informations sur l'artiste (Artist) contiennent un id (qui dépendra de la 
-base de données), le nom de l'artiste interprète du morceau qui sera stocké dans 
-une chaine de caractères ainsi qu'une liste d'artistes similaires.
+Les informations sur l'artiste (Artist) contiennent un identifiant (qui 
+dépendra de la base de données), le nom de l'artiste interprète du morceau 
+qui sera stocké dans une chaîne de caractères, ainsi qu'une liste d'artistes 
+similaires.
 
-L'album contient lui aussi un id, son nom (qui est utilisé pour la sortie dans 
-le cas où c'est nécessaire), l'artiste de l'album (pouvant différer de celui du 
-morceau dans le champ artiste par exemple dans le cas d'une collaboration avec 
-un autre artiste), et l'année de sortie.
+L'album contient lui aussi un identifiant, son nom (qui est utilisé par le 
+module de sortie dans le cas où c'est nécessaire), l'artiste de l'album 
+(pouvant différer de celui du morceau dans le champ \textit{artist}, par 
+exemple dans le cas d'une collaboration avec une autre personne), et l'année 
+de sortie.
 
 Ces deux sections appartienent aux données de contexte.
 
 \subsection{Playlist et échantillon de morceaux}
 \label{archi:structures:playlist}
 
-La Playlist et l'échantillon de morceaux sont deux listes de morceaux, la 
-première est remplie par le module de données et la deuxième par le générateur. 
-La Playlist contient un booléen qui permet de renseigner la satisfaction ou non 
-de la playlist à l'interface utilisateur, afin de proposer une re-génération à 
-l'utilisateur.
+La Playlist et l'échantillon de morceaux sont deux listes de morceaux. La 
+première est remplie par le module de données, et la deuxième par le 
+générateur. La Playlist contient un booléen qui permet de renseigner la 
+satisfaction ou non du résultat à l'interface utilisateur, afin de proposer, 
+dans le cas où la playlist n'est pas satisfaisante, une nouvelle génération 
+à l'utilisateur.
 
 \subsection{Paramètres}
 \label{archi:structures:param}
 
 Les paramètres du programme entrés par l'utilisateur seront représentés et 
 stockés sous la forme d'un morceau. Les champs non-utilisés par le programme 
-seront ignorés et les champs non-renseignés par l'utilisateur seront affectés 
-à des valeurs spécifiques pour signaler qu'elles ne sont pas utilisés (les 
-champs string seront vides, les champs float seront mis à 2 (puisque nous 
-n'utilisons que des valeurs comprises entre 0 et 1) et les années de sortie 
-en int seront mises à 0).
+seront ignorés, et les champs non-renseignés par l'utilisateur seront 
+affectés à des valeurs spécifiques afin de signifier qu'elles ne sont pas 
+utilisées : les champs de type \textit{string} seront vides, les champs de 
+type \textit{float} auront la valeur 2 (puisque nous n'utilisons que des 
+valeurs comprises entre 0 et 1), et les années de sortie de type 
+\textit{int} seront mises à 0.
