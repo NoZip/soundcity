@@ -1,7 +1,9 @@
 
 \section{Architecture des modules}
+\label{archi:modules}
 
 \subsection{Interface Utilisateur}
+\label{archi:modules:iu}
 
 L'Interface Utilisateur (UserInterface) se charge de faire le lien entre
 l'utilisateur et le programme, ses fonctions principales sont de lancer une
@@ -12,6 +14,7 @@ d'initialisation est lancée, elle permet d'assurer la présence de la Base de
 Données et du/des modules de sortie.
 
 \subsection{Générateur}
+\label{archi:modules:generateur}
 
 Le module de génération (caractérisé par 3 sous-modules: Generator, 
 SimilarityEngine et FeedbackEngine) s'occupe de faire la génération de
@@ -35,6 +38,7 @@ permet de communiquer avec l'interface utilisateur afin d'apporter un visuel
 de la génération en cours pour aider l'utilisateur à patienter.
 
 \subsection{Module de données}
+\label{archi:modules:donnees}
 
 Le module de données (SQLiteDatabase) a pour objectif d'assurer la communication 
 entre le module de génération et la base de données utilisée. Sa principale 
@@ -45,6 +49,7 @@ De plus, lors du lancement du programme une fonction d'initialisation est
 appellée afin de certifier la présence de la Base de Données.
 
 \subsection{Module de sortie}
+\label{archi:modules:sortie}
 
 Le module de sortie (ici TextFormatter) est en charge de fournir à 
 l'utilisateur un moyen de récuperer le résultat de la génération demandée. Ce 
@@ -56,8 +61,10 @@ Cette fontionnalité est assurée par la fonction format à laquelle on passe la
 playlist générée en paramètre.
 
 \section{Structures de données}
+\label{archi:structures}
 
 \subsection{Morceau}
+\label{archi:structures:morceau}
 
 Un morceau (Track) est la structure principale du programme, elle peut être 
 utilisée tant pour décrire un morceau que pour décrire des paramètres 
@@ -67,6 +74,7 @@ pour un soucis de visibilité à l'exception d'un id qui concerne l'identifiant
 dans la base de données du morceau (utilisé pour éviter des duplications).
 
 \subsubsection{Données signal}
+\label{archi:structures:morceau:signal}
 
 Les données signal, représentées par la structure SignalData, sont l'ensemble 
 des valeurs correspondant aux déscripteurs audio du morceau à savoir: le rythme, 
@@ -74,6 +82,7 @@ l'énergie et la tonalité (rythme, energy et tonality). Ces valeurs sont
 exprimées par des floats compris entre 0 et 1.
 
 \subsubsection{Données de contexte}
+\label{archi:structures:morceau:contexte}
 
 Les données de contexte sont représentées par la structure ContextData. Cette 
 structure contient les informations sur le morceaux qui ne sont pas relatives 
@@ -82,6 +91,7 @@ informations sont un score de popularité compris entre 0 et 1, l'artiste qui
 en est à l'origine et l'album sur lequel il se trouve.
 
 \subsubsection{Informations sur l'artiste et l'album}
+\label{archi:structures:morceau:artiste}
 
 Les informations sur l'artiste (Artist) contiennent un id (qui dépendra de la 
 base de données), le nom de l'artiste interprète du morceau qui sera stocké dans 
@@ -95,6 +105,7 @@ un autre artiste), et l'année de sortie.
 Ces deux sections appartienent aux données de contexte.
 
 \subsection{Playlist et échantillon de morceaux}
+\label{archi:structures:playlist}
 
 La Playlist et l'échantillon de morceaux sont deux listes de morceaux, la 
 première est remplie par le module de données et la deuxième par le générateur. 
@@ -103,6 +114,7 @@ de la playlist à l'interface utilisateur, afin de proposer une re-génération 
 l'utilisateur.
 
 \subsection{Paramètres}
+\label{archi:structures:param}
 
 Les paramètres du programme entrés par l'utilisateur seront représentés et 
 stockés sous la forme d'un morceau. Les champs non-utilisés par le programme 

@@ -1,7 +1,6 @@
 
-\section{Scénarios d'utilisation}
-
-\subsection{Initialisation du programme}
+\section{Initialisation du programme}
+\label{scenarii:init}
     
 Lors de l'initialisation du programme, trois cas de figure peuvent être
 rencontrés : 
@@ -15,7 +14,8 @@ données.
 sortie.
 \end{itemize}
 
-\subsubsection{Initialisation réussie}
+\subsection{Initialisation réussie}
+\label{scenarii:init:reussie}
 
 Lors du démarrage du programme, l'interface utilisateur va demander au 
 module de génération de playlists de vérifier la présence d'une base de 
@@ -37,7 +37,8 @@ sortie disponibles.
 \caption{Initialisation réussie, le programme est lancé.}          
 \end{figure}
         
-\subsubsection{Absence de base de données}
+\subsection{Absence de base de données}
+\label{scenarii:init:nobdd}
         
 Lorsque le module de données tente de se connecter à la base de données, il 
 se peut que la connexion échoue pour diverses raisons. Dans ce cas, le 
@@ -50,7 +51,8 @@ module de données renvoie au générateur un message d'erreur qu'il transmet à
 \caption{Absence de base de données lors de l'initialisation}
 \end{figure}
         
-\subsubsection{Absence de module de sortie}
+\subsection{Absence de module de sortie}
+\label{scenarii:init:noout}
 
 Dans le cas où l'interface utilisateur effectue correctement une connexion à 
 la base de données, mais n'arrive pas à établir une liste des sorties 
@@ -63,9 +65,11 @@ l'utisilateur, et entraîner l'arrêt du programme.
 \caption{Absence de sorties disponibles lors de l'initialisation}
 \end{figure}
  
-\subsection{Génération}
+\section{Génération}
+\label{scenarii:gen}
 
-\subsubsection{Génération fonctionnelle et satisfaisante}
+\subsection{Génération fonctionnelle et satisfaisante}
+\label{scenarii:gen:satis}
 
 \begin{enumerate}
 \item L'utilisateur décide de lancer la génération d'une playlist.
@@ -89,7 +93,8 @@ passant par l'interface.
 \caption{Génération de playlist réussie}
 \end{figure}
 
-\subsubsection{Génération non satisfaisante}
+\subsection{Génération non satisfaisante}
+\label{scenarii:gen:nosatis}
 
 \begin{enumerate}
 \item L'utilisateur décide de lancer la génération d'une playlist.
@@ -120,7 +125,8 @@ passant par l'interface.
 \end{figure}
  
 
-\subsubsection{Génération incomplète}
+\subsection{Génération incomplète}
+\label{scenarii:gen:incomp}
 
 \begin{enumerate}
 \item L'utilisateur décide de lancer la génération d'une playlist.
@@ -148,7 +154,8 @@ passant par l'interface.
 \end{figure}
  
 
-\subsubsection{Absence de données répondant aux paramètres}
+\subsection{Absence de données répondant aux paramètres}
+\label{scenarii:gen:nodata}
 
 \begin{enumerate}
 \item L'utilisateur décide de lancer la génération d'une playlist.
