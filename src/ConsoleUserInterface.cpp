@@ -2,7 +2,7 @@
 #include <string.h>
 #include <OptionList.h>
 #include <SQLiteDatabase.h>
-#include <NaiveSimilarityStrategy.h>
+#include <SimilarityStrategy.h>
 #include <Generator.h>
 #include <TextOutput.h>
 
@@ -77,7 +77,7 @@ main(int argc, char *argv[])
   OptionList options("",startYear,endYear,popularity,energy,rhythm,mood,size);
 
   cout << "Initialisation du générateur." << endl;
-  NaiveSimilarityStrategy similarity;
+  SimilarityStrategy similarity;
   SQLiteDatabase database(argv[1]);
   Generator generator(database, similarity);
 
