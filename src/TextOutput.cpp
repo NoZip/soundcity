@@ -1,14 +1,15 @@
 #include <fstream>
 #include <cassert>
 #include <string>
-
 #include <TextOutput.h>
 
 using namespace SoundCity;
 
-void TextOutput::format(Playlist &playlist)
+TextOutput::TextOutput() {}
+
+void TextOutput::format(std::string fileName, Playlist playlist)
 {
-  file.open("resultat.txt", std::ofstream::out | std::ofstream::app);
+  file.open(fileName, std::ofstream::out | std::ofstream::app);
   assert(file.is_open());
 
   for(auto i = playlist.begin(); i != playlist.end(); i++)

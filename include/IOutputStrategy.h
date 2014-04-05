@@ -2,6 +2,7 @@
 #define IOUTPUTSTRATEGY_H
 
 #include <Playlist.h>
+#include <string>
 
 namespace SoundCity
 {
@@ -16,7 +17,7 @@ namespace SoundCity
      * @param playlist La playlist générée.
      */
     
-    virtual void format(Playlist &playlist) = 0;
+    virtual void format(std::string fileName, Playlist playlist) = 0;
   };
 }
 
