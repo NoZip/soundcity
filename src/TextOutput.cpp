@@ -9,7 +9,7 @@ TextOutput::TextOutput() {}
 
 void TextOutput::format(std::string fileName, Playlist playlist)
 {
-  file.open(fileName, std::ofstream::out | std::ofstream::app);
+  file.open(fileName, std::ofstream::out | std::ofstream::trunc);
   assert(file.is_open());
 
   for(auto i = playlist.begin(); i != playlist.end(); i++)
