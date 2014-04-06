@@ -7,6 +7,59 @@
 \section{Génération}
 \label{impl:generation}
 
+L'objectif du générateur étant d'assurer une similarité entre tous les morceaux de la playlist mais surtout d'assurer la similarité des morceaux deux à deux dans l'enchainement des morceaux il a été choisi d'implémenter notre algorithme de génération sous forme itérative.
+
+\subsection{Algorithme naïf}
+\label{impl:selection:naif}
+
+La première solution proposée pour implémenter la génération de playlist a été de réaliser un algorithme glouton et naïf.\newline
+
+L'algorithme est le suivant~:
+
+\begin{enumerate}
+\item Début.
+\item Le premier morceau de la Pool devient le premier morceau de la Playlist.
+\item Tant que la Playlist n'a pas la taille requise et que la Pool n'est pas vide~:
+  \begin{enumerate}
+    \item On met le maximum de smilarité à 0.
+    \item Pour chaque morceau t dans la Pool~:
+      \begin{enumerate}
+        \item On calcule le score de similarité entre t et le dernier morceau de la Playlist.
+    \item Si le score de similarité est supérieur au score maximum~:
+        \begin{enumerate}
+        \item On remplace le score maximum par le nouveau score manimum.
+        \item On enregistre le morceaux qui a le meilleur score de similarité.
+        \end{enumerate}
+        \end{enumerate}
+        \item On ajoute le morceau qui a la similarité maximale à la fin de la Playlist actuelle.
+    \end{enumerate}
+    \item Si la similarité globale de la Playlist est suffisante~:
+    \begin{enumerate}
+    \item On marque la Playlist comme valide.
+    \end{enumerate}
+    \item Fin.
+\end{enumerate}
+
+Les résultats de cet algorithme sont bons mais il n'est cependant pas optimal. En effet à chaque ajout de morceau dans la Playlist cet algorithme ne vérifie pas la similarité du morceau testé avec tous les morceaux de la Playlist et n'assure pas que le morceau après lequel il est ajouté est celui avec lequel il a le plus grand score de similarité.
+
+
+\subsection{Algorithme optimal}
+\label{impl:selection:optimal}
+
+Comme énoncé précedemment, le premier algorithme implémenté n'est pas optimal. Il a donc été important de chercher un algorithme proposant une solution optimale ou capable de s'en approcher.\newline
+
+La solution trouvée est de considerer tous les morceaux de la Pool et d'en constituer un graphe complet reliant tous les morceaux les uns aux autres. Les arêtes seraient alors pondérées par le score de similarité entre les morceaux situés à leurs extrémités. Une fois le graphe construit il faut appliquer un algorithme capable de calculer le coût de tous les chemins de taille N (avec N la taille souhaitée pour la Playlist).\newline
+
+Un nouveau problème se pose alors~: Le calcul de similarité utilise les informations contenues dans la base de données. Ne sachant pas la précision de ces informations la question se pose alors de savoir s'il est pertinent d'utiliser un algorithme de grande complexité et de chercher un résultat optimal à partir de données non vérifiables.
+
+\subsection{Optimisation}
+\label{impl:selection:optimisation}
+
+Suite à la question que pose l'utilisation d'un algorithme optimal, il a été décidé que celui-ci ne serait pas implémenté et qu'il serait préférable d'améliorer le résultat obtenu par l'algorithme naïf en y apportant une légère optimisation.\newline
+
+En effet la faiblesse de cet algorithme est de ne comparer les morceaux restants dans la Pool qu'au dernier morceau ajouté dans la Playlist. Cette dernière étant implémentée par une liste doublement chainée il a alors été décidé de comparer les éléments restants dans la Pool au dernier mais aussi au premier élément de la Playlist afin d'augmenter les chances d'obtenir un meilleur résultat.
+
+
 \section{Similarité}
 \label{impl:similarite}
 
@@ -19,7 +72,7 @@ Comme énoncé précedemment (c.f. Section \ref{besoins:nfonc:perf:mod:similarit
 
 Ce choix a été guidé par le fait que la base de données utilisée par notre générateur pouvant être changée par l'utilisateur. Il faut donc pouvoir facilement adapter notre calcul de similarité à une nouvelle base de données afin d'assurer que le générateur conserve sa pertinence.
 
-\subsection{Calcul de similarité naif}
+\subsection{Calcul de similarité naïf}
 \label{impl:similarite:naif}
 
 Dans un premier temps nous avons choisi d'implémenter un calcul de similarité dit «~naïf~» afin d'assurer un fonctionnement minimal à notre générateur. 
