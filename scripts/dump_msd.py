@@ -59,8 +59,8 @@ CREATE TABLE artists (
 
 ARTIST_SIMILARITY_TABLE = """
 CREATE TABLE artists_similarity (
-    target TEXT,
-    similar TEXT
+    target INTEGER,
+    similar INTEGER
 )
 """
 
@@ -147,13 +147,11 @@ def add_artist(sql_connection, artist):
 
     # sql_connection.commit()
 
-def add_similar_artist(sql_connection, target, similar):
-    sql_connection.execute("INSERT INTO artists_similarity VALUES (?, ?)", (target, similar))
-    # sql_connection.commit()
-
 albums = {}
 artists = {}
 tracks = set()
+similarity_echonest = {}
+artists_echonest2internal = {}
 
 def verify_song(song):
     return (
@@ -260,9 +258,11 @@ def analyse_file(sql_connection, path):
         add_artist(sql_connection, artist)
         artists[artist["name"]] = artist["id"]
 
+        artists_echonest2internal[artist["id_echonest"]] = artist["id"]
+
         #add similar artists
         for similar in similar_artists:
-            add_similar_artist(sql_connection, artist["id_echonest"], similar)
+            similarity_echonest.setdefault(artist["id_echonest"], []).append(similar)
 
     artist_id = artists[song["artist"]["name"]]
 
@@ -312,6 +312,23 @@ def analyse_file(sql_connection, path):
 
     data.close()
 
+def compute_similarity_db(sql_connection):
+    for target, artist_similarity_list in similarity_echonest.items():
+        if target not in artists_echonest2internal:
+            break
+
+        target_internal = artists_echonest2internal[target]
+
+        for similar in artist_similarity_list:
+            if similar not in artists_echonest2internal:
+                break
+
+            similar_internal = artists_echonest2internal[similar]
+
+            sql_connection.execute("INSERT INTO artists_similarity VALUES (?, ?)", (target_internal, similar_internal))
+
+    sql_connection.commit()
+
 def analyse_dir(sql_connection, path):
     for entry in os.listdir(path):
         if entry[-2:] == "h5":
@@ -347,4 +364,5 @@ if __name__ == "__main__":
     sql_connection.commit()
     sql_connection.execute("DELETE FROM tracks WHERE id_7digital < 0")
     sql_connection.commit()
+    compute_similarity_db(sql_connection)
     sql_connection.close()
