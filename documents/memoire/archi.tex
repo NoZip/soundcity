@@ -7,11 +7,11 @@
 
 L'Interface Utilisateur (UserInterface) se charge de faire le lien entre
 l'utilisateur et le programme. Sa fonction principale est de lancer une
-génération de playlist en appelant la fonction generate() du module de 
+génération de playlist en appelant la fonction \texttt{generate} du module de 
 génération. Lors de l'appel à cette fonction, les informations rentrées par 
 l'utilisateur sont transmises en paramètres. Lors du lancement du programme,
  une fonction d'initialisation est lancée. Cette dernière permet d'assurer 
- la présence de la Base de Données ainsi que du, ou des, module(s) de sortie.
+ la présence de la base de données ainsi que du, ou des, module(s) de sortie.
 
 \subsection{Générateur}
 \label{archi:modules:generateur}
@@ -20,13 +20,13 @@ Le module de génération (lui-même composé de 3 sous-modules: Generator,
 SimilarityEngine et FeedbackEngine) s'occupe de la création de la playlist. 
 L'interface utilisateur appelle toutes les fonctions du sous-module 
 Generator, et celui-ci appelle à son tour toutes les fonctions des deux 
-autres sous-modules. La fonction initialization() sert à vérifier la 
+autres sous-modules. La fonction \texttt{initialization} sert à vérifier la 
 présence de base de données lors du démarrage du programme. 
 
-La fonction generate() sert à générer la playlist d'après les options 
+La fonction \texttt{generate} sert à générer la playlist d'après les options 
 passées via l'interface utilisateur. Elle effectuera un appel à la fonction 
-select() du module de données afin de récupérer un ensemble fini de morceaux.
- La fonction regenerate() est utilisée dans la situation particulière où 
+\texttt{select} du module de données afin de récupérer un ensemble fini de morceaux.
+ La fonction \texttt{regenerate} est utilisée dans la situation particulière où 
  l'utilisateur se voit proposer de faire une nouvelle génération dans le cas 
  où la génération précédente est jugée non satisfaisante (voir le dossier 
  d'Analyse de besoins). Cette fonction prend donc les options en paramètres 
@@ -42,7 +42,14 @@ patienter.
 \subsection{Module de données}
 \label{archi:modules:donnees}
 
-Le module de données (SQLiteDatabase) a pour objectif d'assurer la communication entre le module de génération et la base de données utilisée. Sa principale fonctionnalité est d'effectuer une séléction dans la base de données en fonction du nombre de chansons souhaité et des paramètres de séléction entrés par l'utilisateur. Cette opération se fait grâce à la fonction select(). De plus, lors du lancement du programme, une fonction d'initialisation est appellée afin de certifier la présence de la base de données.
+Le module de données (SQLiteDatabase) a pour objectif d'assurer la 
+communication entre le module de génération et la base de données utilisée. 
+Sa principale fonctionnalité est d'effectuer une séléction dans la base de 
+données en fonction du nombre de chansons souhaité et des paramètres de 
+séléction entrés par l'utilisateur. Cette opération se fait grâce à la 
+fonction \texttt{select}. De plus, lors du lancement du programme, une 
+fonction d'initialisation est appellée afin de certifier la présence de la 
+base de données.
 
 \subsection{Module de sortie}
 \label{archi:modules:sortie}
@@ -54,7 +61,7 @@ respecter l'interface OutputStrategy pour pouvoir être utilisés sur le
 programme. Dans le cas du module TextOutput, le résultat obtenu sera mis 
 sous la forme d'un fichier texte contenant les titres des différents 
 morceaux de la playlist. Cette fontionnalité est assurée par la fonction 
-format() à laquelle on passe la playlist générée en paramètre.
+\texttt{format} à laquelle on passe la playlist générée en paramètre.
 
 \section{Structures de données}
 \label{archi:structures}
