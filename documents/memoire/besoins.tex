@@ -153,3 +153,84 @@ Les interfaces utilisateurs devront être utilisables par un utilisateur
 non-avancé, être claires et précises, et éviter de perdre l’utilisateur. Les
 termes employés sur cette interface devront être écrit dans un vocabulaire
 compréhensible de tous.
+
+\section{Contraintes}
+\label{besoins:contraintes}
+
+\subsection{Base de données}
+\label{besoins:contraintes:bdd}
+Nous ne disposons pas d’analyseur de morceaux, et en créer un ne fait pas partie
+de notre sujet. Nous devons donc utiliser nous-même une base de données déjà
+existante afin de travailler dessus. Nous avons donc choisi d’utiliser la Million
+Song Dataset (http://labrosa.ee.columbia.edu/millionsong/) qui contient toutes
+les informations dont nous avons besoin. Nous la convertirons en base de données
+SQL pour améliorer le temps de récupération des données. Il va donc falloir comprendre
+le fonctionnement de la MSD afin de pourvoir créer un script qui permettera d'en extraire 
+les informations et créer une base de données MySQL.
+    
+Cette base de données pèse 500Go, la conversion doublera la place nécessaire pour
+stocker nos bases de données. Bien que nous travaillerons sur un échantillon
+restreint au départ, nous devrons disposer d’un espace de travail d’au moins 1
+téraoctet. Nous allons au préalabre travailler sur cet échantillon pour un gain de temps
+de convertion et de stockage.
+
+La MSD est la seule base pouvant nous servir de test, et les informations qu'elle contient
+sont parfois très inexactes voire complétement absentes, nous devons faire abstraction de
+ces cas particuliers même si ils peuvent nous poser des problèmes dans le cadre des tests
+(puisque nous considérons les informations toutes rensignées et correctes).
+
+\section{Prototypes}
+\label{besoins:proto}
+
+\subsection{Interface utilisateur graphique}
+\label{besoins:proto:gui}
+    
+L'idée de notre interface graphique est de permettre à un utilisateur non aguérri
+de faire fonctionner notre programme sans avoir de grandes connaissances en
+informatique musicale. C'est pourquoi nous avons choisi de réaliser une interface
+graphique simple et au vocabulaire accessible. Par exemple, l'energie du morceau
+sera représentée par un curseur pouvant varier de «~léger~» à «~puissant~», sans
+proposer à l'utilisateur de choisir une valeur numérique précise, qui ne
+représenterait rien à ses yeux.
+    
+Les différents paramètres d'entrée sont ainsi organisés de façon à partir du plus
+basique au plus complèxe, en regroupant les paramètres dits contextuels (artiste,
+genre etc.) en haut et les desripteurs audio en dessous (rythme, énergie, etc.).
+
+Enfin nous proposons d'inclure des checkboxs afin que l'utilisateur puisse
+choisir quels paramètres il veut ou non prendre en compte, et ainsi lui laisser
+la possibilité de choisir le degré de spécification de la playlist.
+    
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/besoins/interface_utilisateur.png}
+\caption{Prototype de l'interface utilisateur graphique.}
+\end{figure}
+
+\subsection{Interface utilisateur console}
+\label{besoins:proto:console}
+
+Cette interface aura les mêmes fonctionnalités que l'interface console, à la différence que tous les options seront placées lors de l'appel du programme :
+
+\vspace{3mm}
+\noindent Les paramètres sont les suivants~:
+\begin{itemize}
+\item \texttt{-y <startYear[1-3000]> <endYear[1-3000]>} : Définit un intervalle 
+d'années de morceaux.
+\item \texttt{-e <energy[0.0-1.0]>} : Impose une valeur d'énergie dans 
+la playlist générée.
+\item \texttt{-p <popularity[0.0-1.0]>} : Impose une valeur de popularité 
+dans la playlist générée.
+\item \texttt{-r <rhythm[0.0-1.0]>} : Impose un rythme dans la 
+playlist générée.
+\item \texttt{-m <mood[0.0-1.0]>} : Impose une humeur dans la 
+playlist générée (plus la valeur est grande plus le morceau est joyeux).
+\item \texttt{-s <size[1-100]>} : Choix de la taille de la 
+playlist générée (10 par défaut).
+\item \texttt{-o <fileName>} : Choix du nom du fichier de sortie.
+\item \texttt{-a <artistName>} : Impose un artiste.
+\end{itemize}
+
+\subsection{Base de données}
+\label{besoins:proto:bdd}
+
+La base de données que nous utiliserons sera une conversion en base SQL de la Million Song Database dont nous extrairons uniquement les valeurs dont nous avons besoin.
