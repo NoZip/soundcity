@@ -11,8 +11,8 @@ const int POOL_SIZE_FACTOR = 10; //Taille de la pool en fonction de la taille de
 
 Generator::Generator(IDatabase &db, const ISimilarityStrategy &similarity) :
 similarity(similarity),
-//selectionFeedback(),
-//generationFeedback(),
+selectionFeedback(),
+generationFeedback(),
 db(db)
 {
   assert(&similarity);
@@ -26,7 +26,7 @@ int Generator::initialization() const
   return db.initialization();
 }
 
-void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSizeToReach, const ISimilarityStrategy &similarity)
+void Generator::generationLoop(Playlist * playlist, TrackPool &pool, std::size_t playlistSizeToReach)
 {
   //On place le premier morceau de la pool dans la playlist
   Track poolFirstTrack = *pool.begin();
@@ -69,6 +69,7 @@ void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSiz
     if(maxSimilarityAtStart > maxSimilarityAtEnd)
     {
       playlist->push_front(bestTrackAtStart);
+      generationFeedback.notifyAll(playlist->size(), playlistSizeToReach, bestTrackAtStart);
       pool.erase(bestTrackAtStart);
       playlistFirstTrack = bestTrackAtStart;
       playlistSimilarity += maxSimilarityAtStart;
@@ -76,6 +77,7 @@ void generationLoop(Playlist * playlist, TrackPool pool, std::size_t playlistSiz
     else
     {
       playlist->push_back(bestTrackAtEnd);
+      generationFeedback.notifyAll(playlist->size(), playlistSizeToReach, bestTrackAtEnd);
       pool.erase(bestTrackAtEnd);
       playlistLastTrack = bestTrackAtEnd;
       playlistSimilarity += maxSimilarityAtEnd;
@@ -92,11 +94,12 @@ Playlist Generator::generate(OptionList optionList)
 {
   //Recupération d'une pool de morceaux
   TrackPool pool = db.select(optionList,optionList.getSize()*POOL_SIZE_FACTOR);
+  selectionFeedback.notifyAll(pool.size(), pool);
   Playlist playlist;
   if(pool.size() == 0)
     return playlist;
   //On lance la génération
-  generationLoop(&playlist, pool, optionList.getSize(), similarity);
+  generationLoop(&playlist, pool, optionList.getSize());
   return playlist;
 }
 
@@ -104,6 +107,7 @@ Playlist Generator::regenerate(OptionList optionList, Playlist playlist)
 {
   //Recupération d'une pool de morceaux
   TrackPool pool = db.select(optionList,optionList.getSize()*POOL_SIZE_FACTOR);
+  selectionFeedback.notifyAll(pool.size(), pool);
   if(pool.size() == 0)
     return playlist;
   //On remplit la pool avec les morceaux de la playlist précédente
@@ -111,6 +115,6 @@ Playlist Generator::regenerate(OptionList optionList, Playlist playlist)
     pool.insert(*it);
   Playlist newPlaylist;
   //On lance la génération
-  generationLoop(&newPlaylist, pool, optionList.getSize(), similarity);
+  generationLoop(&newPlaylist, pool, optionList.getSize());
   return newPlaylist;
 }

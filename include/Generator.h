@@ -18,8 +18,10 @@ namespace SoundCity
    */
   class Generator{
   public:
-    Generator(IDatabase &db,
-	      const ISimilarityStrategy &similarity);
+    Generator(IDatabase &db, const ISimilarityStrategy &similarity);
+
+    SelectionObservable& getSelectionObservable() {return selectionFeedback;}
+    GenerationObservable& getGenerationObservable() {return generationFeedback;}
 
     /**
      * Initialise le générateur et vérifie que tout est 
@@ -38,10 +40,12 @@ namespace SoundCity
      */
     Playlist regenerate(OptionList optionList, Playlist playlist);
 
-  private:
+  protected:
+    void generationLoop(Playlist * playlist, TrackPool &pool, std::size_t playlistSizeToReach);
+
     IDatabase &db;
-    //SelectionObservable selectionFeedback;
-    //GenerationObservable generationFeedback;
+    SelectionObservable selectionFeedback;
+    GenerationObservable generationFeedback;
     const ISimilarityStrategy &similarity;
     
   };

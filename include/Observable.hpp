@@ -5,7 +5,7 @@
 
 namespace SoundCity {
 
-template <class Observer>
+template <class IObserver>
 class Observable {
 public:
   Observable() {
@@ -13,7 +13,7 @@ public:
   }
 
   ~Observable() {
-    for (Observer *observer : linkedObservers) {
+    for (IObserver *observer : linkedObservers) {
       delete observer;
     }
   }
@@ -22,6 +22,7 @@ public:
    * Attache un observer.
    * @param observer L'observer à ajouter.
    */
+  template <class Observer>
   void attach(const Observer &observer) {
     linkedObservers.push_back(new Observer(observer));
   }
@@ -30,12 +31,13 @@ public:
    * Détache un observer.
    * @param observer l'observer à détacher.
    */
+  template <class Observer>
   void detach(const Observer &observer) {
     linkedObservers.remove(new Observer(observer));
   }
 
 protected:
-  std::list<Observer*> linkedObservers; ///< Liste d'observers interne.
+  std::list<IObserver*> linkedObservers; ///< Liste d'observers interne.
 };
 
 } // end namespace SoundCity

@@ -13,6 +13,8 @@ set(SOUNDCITY_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/Artist.cpp
   ${PROJECT_SOURCE_DIR}/src/Album.cpp
   ${PROJECT_SOURCE_DIR}/src/OptionList.cpp
+  ${PROJECT_SOURCE_DIR}/src/SelectionObservable.cpp
+  ${PROJECT_SOURCE_DIR}/src/GenerationObservable.cpp
   ${PROJECT_SOURCE_DIR}/src/SQLiteDatabase.cpp
   ${PROJECT_SOURCE_DIR}/src/Generator.cpp
   ${PROJECT_SOURCE_DIR}/src/NaiveSimilarityStrategy.cpp
