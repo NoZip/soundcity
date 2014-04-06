@@ -1,135 +1,58 @@
+\section{Architecture générale}
+\label{archi:general}
 
-\section{Architecture des modules}
-\label{archi:modules}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/archi/general.png}
+\caption{Diagramme général simplifié.}
+\end{figure}
 
-\subsection{Interface Utilisateur}
-\label{archi:modules:iu}
+\section{Communication entre modules~: Morceaux et Options}
+\label{archi:communication}
 
-L'Interface Utilisateur (UserInterface) se charge de faire le lien entre
-l'utilisateur et le programme. Sa fonction principale est de lancer une
-génération de playlist en appelant la fonction \texttt{generate} du module de 
-génération. Lors de l'appel à cette fonction, les informations rentrées par 
-l'utilisateur sont transmises en paramètres. Lors du lancement du programme,
- une fonction d'initialisation est lancée. Cette dernière permet d'assurer 
- la présence de la base de données ainsi que du, ou des, module(s) de sortie.
+\subsection{Morceaux}
+\label{archi:communication:track}
 
-\subsection{Générateur}
-\label{archi:modules:generateur}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/archi/track.png}
+\caption{Diagramme des classes constituant un morceau.}
+\end{figure}
 
-Le module de génération (lui-même composé de 3 sous-modules: Generator, 
-SimilarityEngine et FeedbackEngine) s'occupe de la création de la playlist. 
-L'interface utilisateur appelle toutes les fonctions du sous-module 
-Generator, et celui-ci appelle à son tour toutes les fonctions des deux 
-autres sous-modules. La fonction \texttt{initialization} sert à vérifier la 
-présence de base de données lors du démarrage du programme. 
+\subsection{Options:~ La classe OptionList}
+\label{archi:communication:options}
 
-La fonction \texttt{generate} sert à générer la playlist d'après les options 
-passées via l'interface utilisateur. Elle effectuera un appel à la fonction 
-\texttt{select} du module de données afin de récupérer un ensemble fini de morceaux.
- La fonction \texttt{regenerate} est utilisée dans la situation particulière où 
- l'utilisateur se voit proposer de faire une nouvelle génération dans le cas 
- où la génération précédente est jugée non satisfaisante (c.f. Section
-  \ref{besoins:fonc}). Cette fonction prend donc les options en paramètres 
- et récupère la précèdente playlist générée dans le but de l'améliorer.
+\section{Génération}
+\label{archi:generation}
 
-Le sous-module SimilarityEngine sert à calculer la similarité entre deux 
-morceaux afin de vérifier la cohérence et la validité de la playlist. Le 
-sous-module FeedbackEngine permet de communiquer avec l'interface 
-utilisateur pour apporter un visuel de la progression de la génération afin 
-d'informer l'utilisateur de l'avancement de la création, et l'aider à 
-patienter.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/archi/generator.png}
+\caption{Diagramme des classes du générateur.}
+\end{figure}
 
-\subsection{Module de données}
-\label{archi:modules:donnees}
+\subsection{Le cœur de la génération~: La classe Generator}
+\label{archi:generation:generator}
 
-Le module de données (SQLiteDatabase) a pour objectif d'assurer la 
-communication entre le module de génération et la base de données utilisée. 
-Sa principale fonctionnalité est d'effectuer une séléction dans la base de 
-données en fonction du nombre de chansons souhaité et des paramètres de 
-séléction entrés par l'utilisateur. Cette opération se fait grâce à la 
-fonction \texttt{select}. De plus, lors du lancement du programme, une 
-fonction d'initialisation est appellée afin de certifier la présence de la 
-base de données.
+\subsection{Interface avec les données~: L'interface IDatabase}
+\label{archi:generation:database}
 
-\subsection{Module de sortie}
-\label{archi:modules:sortie}
+\subsection{Stratégie de similarité~: l'interface ISimlarityStrategy}
+\label{archi:generation:similarity}
 
-Le module de sortie (ici TextOutput) est en charge de fournir à 
-l'utilisateur un moyen de récuperer le résultat de la génération demandée. 
-Ce module (ainsi que tous les modules de sortie pouvant être crées) devront 
-respecter l'interface OutputStrategy pour pouvoir être utilisés sur le 
-programme. Dans le cas du module TextOutput, le résultat obtenu sera mis 
-sous la forme d'un fichier texte contenant les titres des différents 
-morceaux de la playlist. Cette fontionnalité est assurée par la fonction 
-\texttt{format} à laquelle on passe la playlist générée en paramètre.
+\section{Module de sortie}
+\label{archi:sortie}
 
-\section{Structures de données}
-\label{archi:structures}
+\section{Interface Utilisateur}
+\label{archi:interface}
 
-\subsection{Morceau}
-\label{archi:structures:morceau}
+\subsection{Retour utilisateur}
+\label{archi:interface:feedback}
 
-Un morceau (Track) est la structure principale du programme. Cette dernière 
-peut être utilisée tant pour décrire un morceau que pour décrire des 
-paramètres (certains paramètres seront utilisés uniquement dans le premier 
-cas). Les paramètres sont triés dans deux sous-sections (signal\_data et 
-context\_data) dans un soucis de visibilité, à l'exception d'un \textit{id} 
-qui concerne l'identifiant dans la base de données du morceau (utilisé pour 
-éviter des duplications).
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/archi/feedback.png}
+\caption{Diagramme des classes servant au retour utilisateur.}
+\end{figure}
 
-\subsubsection{Données signal}
-\label{archi:structures:morceau:signal}
-
-Les données signal, représentées par la structure SignalData, sont 
-l'ensemble des valeurs correspondant aux déscripteurs audio du morceau, à 
-savoir: le rythme, l'énergie et la tonalité (\textit{rythme}, \textit{energy}
- et \textit{tonality}). Ces valeurs sont exprimées par des nombres flottants 
- compris entre 0 et 1.
-
-\subsubsection{Données de contexte}
-\label{archi:structures:morceau:contexte}
-
-Les données de contexte sont représentées par la structure ContextData, qui 
-contient les informations sur le morceau qui ne sont pas relatives au 
-signal : elles décrivent le contexte culturel du morceau. Ces informations 
-sont :  un score de popularité exprimé par un nombre flottant compris entre 
-0 et 1, l'artiste qui est à l'origine du morceau et l'album sur lequel il 
-se trouve.
-
-\subsubsection{Informations sur l'artiste et l'album}
-\label{archi:structures:morceau:artiste}
-
-Les informations sur l'artiste (Artist) contiennent un identifiant (qui 
-dépendra de la base de données), le nom de l'artiste interprète du morceau 
-qui sera stocké dans une chaîne de caractères, ainsi qu'une liste d'artistes 
-similaires.
-
-L'album contient lui aussi un identifiant, son nom (qui est utilisé par le 
-module de sortie dans le cas où c'est nécessaire), l'artiste de l'album 
-(pouvant différer de celui du morceau dans le champ \textit{artist}, par 
-exemple dans le cas d'une collaboration avec une autre personne), et l'année 
-de sortie.
-
-Ces deux sections appartienent aux données de contexte.
-
-\subsection{Playlist et échantillon de morceaux}
-\label{archi:structures:playlist}
-
-La Playlist et l'échantillon de morceaux sont deux listes de morceaux. La 
-première est remplie par le module de données, et la deuxième par le 
-générateur. La Playlist contient un booléen qui permet de renseigner la 
-satisfaction ou non du résultat à l'interface utilisateur, afin de proposer, 
-dans le cas où la playlist n'est pas satisfaisante, une nouvelle génération 
-à l'utilisateur.
-
-\subsection{Paramètres}
-\label{archi:structures:param}
-
-Les paramètres du programme entrés par l'utilisateur seront représentés et 
-stockés sous la forme d'un morceau. Les champs non-utilisés par le programme 
-seront ignorés, et les champs non-renseignés par l'utilisateur seront 
-affectés à des valeurs spécifiques afin de signifier qu'elles ne sont pas 
-utilisées : les champs de type \textit{string} seront vides, les champs de 
-type \textit{float} auront la valeur 2 (puisque nous n'utilisons que des 
-valeurs comprises entre 0 et 1), et les années de sortie de type 
-\textit{int} seront mises à 0.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{data/archi/feedback_sequence.png}
+\caption{Diagramme de séquence du retour utilisateur.}
+\end{figure}
+>>>>>>> Stashed changes
