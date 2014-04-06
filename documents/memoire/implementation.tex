@@ -1,2 +1,89 @@
-
 \section{Implementation}
+\label{impl:general}
+
+\section{Sélection}
+\label{impl:selection}
+
+\section{Génération}
+\label{impl:generation}
+
+\section{Similarité}
+\label{impl:similarite}
+
+Afin de conserver une cohérence avec la façon dont sont représentés les différentes données autour des morceaux, il a été choisi de toujours ramener le score de similarité calculé entre 0 et 1.
+
+\subsection{Pattern strategy}
+\label{impl:similatite:strategy}
+
+Comme énoncé précedemment (c.f. Section \ref{besoins:nfonc:perf:mod:similarity}) il a été choisi d'implémenter le calcul de similarité en suivant le pattern strategy.\newline
+
+Ce choix a été guidé par le fait que la base de données utilisée par notre générateur pouvant être changée par l'utilisateur. Il faut donc pouvoir facilement adapter notre calcul de similarité à une nouvelle base de données afin d'assurer que le générateur conserve sa pertinence.
+
+\subsection{Calcul de similarité naif}
+\label{impl:similarite:naif}
+
+Dans un premier temps nous avons choisi d'implémenter un calcul de similarité dit «~naïf~» afin d'assurer un fonctionnement minimal à notre générateur. 
+Le but de ce calcul n'est pas d'être pertinent mais de permettre de valider l'ordonnancement de plusieurs morceaux en fonction d'un seul critère.\newline
+
+Pour cette implémentation du calcul, on se base uniquement sur la différence entre les années de sorties des albums dont sont extraits les morceaux à laquelle est appliquée un logarithme décimal. L'utilisation du logarithme décimal sert à considérer l'écart d'année entre les morceaux de façon non-linéaire afin d'atténuer les variations trop importantes. Le calcul est donc le suivant(avec date1 et date2 les années de sortie des albums des pistes track1 et track2)~:
+
+\begin{equation*}
+  score(track1, track2) = log_{10}(date1 - date2)
+\end{equation*}\newline
+
+Enfin, pour ramener le score de similarité entre 0 et 1 on applique les opérations suivantes en considérant un seuil en dessous duquel la différence d'années est considérée négligeable~:
+
+\begin{itemize}
+\item score = 1, si le score est supérieur à 1. 
+\item score = 0, si le score le score est inférieur au seuil.
+\item on retourne (1 - score) afin que 0 représente une similarité nulle et 1 une similarité totale.
+\end{itemize}
+
+\subsection{Calcul de similarité complet}
+\label{impl:similarite:complet}
+
+Dans l'implémentation de ce calcul de similarité dit «~complet~», la formule utilisée pour produire un score prend en compte plusieurs caractèristiques des morceaux comparés. Ces caractèristiques sont extraites de la base de données et sont les suivantes~:
+
+\begin{itemize}
+\item le rythme
+\item l'énergie
+\item la date de sortie de l'album dont est extrait le morceaux
+\item le nom de l'artiste
+\end{itemize}
+
+On peut imaginer la répartition de chaque morceau dans un repère à 4 dimensions où chacun des axes représente une de ces quatre caractèristiques. Le score de similarité est alors calculé en faisant une moyenne de la variation entre les deux morceaux sur chacun de ces axes.\newline
+Afin d'établir un ordre d'importance entre ces caractèristiques on décide de pondérer cette moyenne avec les facteurs suivants~:
+
+\begin{itemize}
+\item le rythme compte pour 40\%
+\item l'énergie compte pour 30\%
+\item la date de sortie de l'album compte pour 20\%
+\item le nom de l'artiste compte pour 10\%
+\end{itemize}
+
+Ces facteurs de pondération on été choisis de façon à ce que les données signal representent 70\% du score de similarité et les données contextuelles les 30\% restants.
+
+\subsubsection{Rythme et énergie}
+\label{impl:similarite:complet:rhythm}
+
+La variation entre les deux morceaux sur les axes représentant le rythme et l'énergie se fait de façon classique en inversant le résultat pour toujours considérer 0 comme une similarité nulle et 1 comme une similarité totale comme suit(avec rhythm1, energy1, rhythm2 et energy2 respectivement les rythmes et energies des deux morceaux comparés) ~:
+
+\begin{align}
+  \Delta Rhythm = 1 - |rhythm1 - rhythm2|\\
+  \Delta Energy = 1 - |energy1 - energy2|
+\end{align}
+
+\subsubsection{Date de sortie de l'album}
+\label{impl:similarite:complet:date}
+
+La variation entre les dates de sorties des albums dont sont extraits les deux morceaux est calculée de la même façon que dans le calcul de similarité naïve. (c.f \ref{impl:similarite:naif})
+
+\subsubsection{Nom d'artiste}
+\label{impl:similarite:complet:name}
+
+On considère que deux morceaux du même artiste ont de grandes chances d'être similaires. Cette carectèristique étant faiblement pondéré dans le calcul de similarité on peut définir la variation sur le nom d'artiste comme suivant~:
+
+\begin{align}
+  \Delta Artist = \text{1, si artist1 = artist2.}\\
+  \Delta Artist = \text{0, sinon.}
+\end{align}
