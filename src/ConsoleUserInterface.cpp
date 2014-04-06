@@ -64,7 +64,7 @@ main(int argc, char *argv[])
   float mood = 0;
   float rhythm = 0;
   float popularity = 0;
-  int startYear = 1;
+  int startYear = 0;
   int endYear = 3000;
   string fileName = "playlist.txt";
   bool verbose = false;

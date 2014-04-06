@@ -68,7 +68,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   stringstream buffer;
   buffer << u8"SELECT ";
     // Track
-    buffer << u8"tracks.id, ";
+    buffer << u8"tracks.id_7digital, ";
     buffer << u8"tracks.title, ";
     buffer << u8"tracks.duration, ";
       // Context

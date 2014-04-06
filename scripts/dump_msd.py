@@ -2,6 +2,7 @@ import sys
 import os
 import os.path
 import argparse
+import pprint
 import tables
 import sqlite3
 import numpy
@@ -9,6 +10,9 @@ import numpy
 tracks_id_count = 0
 album_id_count = 0
 artist_id_count = 0
+
+pretty_print = pprint.PrettyPrinter(indent=4, width=80).pprint
+pretty_print_err = pprint.PrettyPrinter(indent=4, width=80, stream=sys.stderr).pprint
 
 TRACK_TABLE = """
 CREATE TABLE tracks (
@@ -154,15 +158,18 @@ tracks = set()
 def verify_song(song):
     return (
         song["artist"]["name"]
-        and 0 <= song["artist"]["familiarity"] <= 1
-        and 0 <= song["artist"]["popularity"] <= 1
+        and (0 <= song["artist"]["familiarity"] <= 1)
+        and (0 <= song["artist"]["popularity"] <= 1)
         and song["album"]["title"]
         #and song["album"]["release"]
         and song["track"]["title"]
         and song["track"]["duration"] > 0
-        and 0 <= song["track"]["popularity"] <= 1
-        and song["track"]["loudness"]
-        and song["track"]["tempo"] > 0
+        and (0 <= song["track"]["popularity"] <= 1)
+        # and song["track"]["loudness"]
+        # and song["track"]["tempo"] > 0
+        and song["track"]["id_7digital"] != -1
+        #and song["artist"]["id_7digital"] >= 0
+        #and song["album"]["id_7digital"] >= 0
         #and song["track"]["key_confidence"] > 0.5
         #and song["track"]["mode_confidence"] > 0.6
     )
@@ -197,7 +204,7 @@ def analyse_file(sql_connection, path):
     metadata = data.root.metadata.songs[0]
     musicbrainz = data.root.musicbrainz.songs[0]
     analysis = data.root.analysis.songs[0]
-    similar_artists = data.root.metadata.similar_artists
+    similar_artists = data.root.metadata.similar_artists[:]
 
     song = dict(
         artist = dict (
@@ -231,13 +238,13 @@ def analyse_file(sql_connection, path):
             mode_confidence = analysis["mode_confidence"] \
                 if not numpy.isnan(analysis["mode_confidence"]) else 0,
         )
-    )    
+    )
 
     print("Analyse de", song["track"]["title"], "par", song["artist"]["name"])
 
     if not verify_song(song):
         print("Reject", file=sys.stderr)
-        print(song, file=sys.stderr)
+        pretty_print_err(song)
         data.close()
         return
 
@@ -328,10 +335,16 @@ if __name__ == "__main__":
 
     sql_connection = sqlite3.connect(options.database_name + ".sqlite")
     sql_connection.execute("DROP TABLE IF EXISTS tracks")
+    sql_connection.commit()
     sql_connection.execute("DROP TABLE IF EXISTS albums")
+    sql_connection.commit()
     sql_connection.execute("DROP TABLE IF EXISTS artists")
+    sql_connection.commit()
     sql_connection.execute("DROP TABLE IF EXISTS artists_similarity")
+    sql_connection.commit()
     create_tables(sql_connection)
     analyse_dir(sql_connection, options.msd_directory + "data/")
+    sql_connection.commit()
+    sql_connection.execute("DELETE FROM tracks WHERE id_7digital < 0")
     sql_connection.commit()
     sql_connection.close()
