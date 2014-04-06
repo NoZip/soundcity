@@ -18,6 +18,8 @@ class Track {
     int getId() const {return id;}
     const ContextData &getContextData() const {return context;}
     const SignalData &getSignalData() const {return signal;}
+    ContextData &getContextData() {return context;}
+    SignalData &getSignalData() {return signal;}
     std::string getTitle() const {return title;}
 
     //Raccourcis
@@ -25,7 +27,7 @@ class Track {
     std::string getArtistName() const {return context.getArtistName();}
     float getArtistFamiliarity() const {return context.getArtistFamiliarity();}
     float getArtistPopularity() const {return context.getArtistPopularity();}
-    std::list<std::string> getSimilarArtists() const {return context.getSimilarArtists();}
+    std::list<int> getSimilarArtists() const {return context.getSimilarArtists();}
     std::string getAlbumTitle() const {return context.getAlbumTitle();}
     std::string getAlbumArtist() const {return context.getAlbumArtist();}
     int getAlbumReleaseDate() const {return context.getAlbumReleaseDate();}

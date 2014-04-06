@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <list>
+
 #include <SQLiteDatabase.h>
 
 using std::size_t;
@@ -155,7 +157,7 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
     assert(status == SQLITE_OK);
   }
 
-  TrackPool pool(size);
+  std::list<Track> track_list;
 
   // Contruction de la pool de pistes
   while ((status = sqlite3_step(preparedRequest)) != SQLITE_DONE)
@@ -198,10 +200,53 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
       )
     );
 
-    pool.insert(track);
+    track_list.push_back(track);
   }
 
   sqlite3_finalize(preparedRequest);
+
+  TrackPool pool(size);
+
+  // ajout des artistes similaires
+  for (Track &track : track_list)
+  {
+    Artist &artist = track.getContextData().getArtist();
+
+    buffer.str(""); // vide le buffer
+
+    buffer << u8"SELECT similar FROM artists_similarity WHERE target = "
+           << artist.getId();
+
+    string request = buffer.str();
+    
+    // Request compilation
+    sqlite3_stmt *preparedRequest = nullptr;
+    int status = sqlite3_prepare_v2(
+      dbConnection,
+      request.c_str(),
+      request.size(),
+      &preparedRequest,
+      nullptr
+    );
+
+    if(status != SQLITE_OK)
+    {
+      std::cout << status << ": " <<sqlite3_errstr(status) << std::endl;
+      assert(status == SQLITE_OK);
+    }
+
+    while ((status = sqlite3_step(preparedRequest)) != SQLITE_DONE)
+    {
+      assert(status == SQLITE_ROW);
+
+      artist.addSimilarArtist(sqlite3_column_int(preparedRequest, 0));
+    }
+
+    sqlite3_finalize(preparedRequest);
+
+    pool.insert(track);
+  }
+
 
   return pool;
 }

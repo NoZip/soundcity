@@ -15,8 +15,10 @@ class ContextData {
     ContextData(const Artist &artist, const Album &album, float popularity);
 
     //Getters
-    const Artist &getArtist() const {return artist;}
-    const Album &getAlbum() const {return album;}
+    const Artist& getArtist() const {return artist;}
+    const Album& getAlbum() const {return album;}
+    Artist& getArtist() {return artist;}
+    Album& getAlbum() {return album;}
     float getPopularity() const {return popularity;}
 
     //Raccourcis
@@ -24,7 +26,7 @@ class ContextData {
     std::string getArtistName() const {return artist.getName();}
     float getArtistFamiliarity() const {return artist.getFamiliarity();}
     float getArtistPopularity() const {return artist.getPopularity();}
-    std::list<std::string> getSimilarArtists() const {return artist.getSimilarArtists();}
+    std::list<int> getSimilarArtists() const {return artist.getSimilarArtists();}
     std::string getAlbumTitle() const {return album.getTitle();}
     std::string getAlbumArtist() const {return album.getArtist();}
     int getAlbumReleaseDate() const {return album.getReleaseDate();}
