@@ -14,6 +14,16 @@ using std::endl;
 using std::cin;
 using std::string;
 
+class GenerationObserver : public IGenerationObserver
+{
+  void notify(std::size_t index, std::size_t size, const Track &track)
+  {
+    float percent = ((float) index / (float) size) * 100;
+    cout << (int) percent << "%\t";
+    cout << track.getTitle() << " by " << track.getArtistName() << endl;
+  }
+};
+
 void 
 usage (char *s)
 {
@@ -36,6 +46,8 @@ usage (char *s)
   fprintf(stderr, "-s <size[1-100]> : Choix de la taille de la playlist générée (10 par défaut).\n");
 
   fprintf(stderr, "-o <fileName> : Choix du nom du fichier de sortie.\n");
+
+  fprintf(stderr, "-v : activation du mode verbeux.\n");
   exit(EXIT_FAILURE);
 }
 
@@ -55,6 +67,7 @@ main(int argc, char *argv[])
   int startYear = 1;
   int endYear = 3000;
   string fileName = "playlist.txt";
+  bool verbose = false;
 
   //Lecture des paramètres
   for(int i = PARAMS; i < argc; ++i)
@@ -71,6 +84,7 @@ main(int argc, char *argv[])
       startYear = atoi(argv[++i]);
       endYear = atoi(argv[++i]);
     }
+    else if(strcmp(argv[i],"-v") == 0) verbose = true;
   }
 
   //Création de la liste d'options
@@ -80,6 +94,7 @@ main(int argc, char *argv[])
   SimilarityStrategy similarity;
   SQLiteDatabase database(argv[1]);
   Generator generator(database, similarity);
+  if (verbose) generator.getGenerationObservable().attach(GenerationObserver());
 
   if(generator.initialization() == 0)
   {
