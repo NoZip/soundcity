@@ -1,15 +1,26 @@
 
-\section{Objectifs}
-Comme il est expliqué plus haut, plusieurs générateurs de playlists existent
-déjà, et permettent de fournir une sélection de morceaux articulée autour 
-d'un même thème et de plusieurs paramètres.
+\section{Objectif principal}
+\label{objectifs:principal}
+
+Comme il est expliqué plus haut (c.f. Section \ref{existant:generateurs}), 
+plusieurs générateurs de playlists existent déjà, et permettent de fournir une 
+sélection de morceaux articulée autour d'un même thème et de plusieurs 
+paramètres.\\
+
 Notre objectif principal est de générer une playlist selon les mêmes types 
 de critères, en gardant une cohérence globale, mais en attachant une 
 importance particulière à l'enchaînement des morceaux. Ainsi, les morceaux 
 de la playlist générée par SoundCity se suivent selon un ordre optimal afin 
 d'éviter des transitions brutales entre deux musiques qui correspondent aux 
 criètres de recherches rentrés, mais qui sont trop différents dans leur 
-structure musicale (tempo trop différent, époque trop lointaine, etc.).
+structure musicale (tempo trop différent, époque trop lointaine, etc.).\\
+
+Un autre point important que le logiciel doit avoir, c'est le retour 
+utilisateur (feedback). La génération de la playlist peut prendre jusqu'à 
+plusieurs dizaines de secondes, et pendant ce temps là, il ne faut pas 
+laisser l'utilisateur sans aucune information. Pour ce faire, à tout moment 
+de la génération, une simple information sur le nombre de morceaux ajoutés à 
+la playlist à cet instant est affichée à l'utilisateur.\\
 
 Pour effectuer la génération de la playlist, l'utilisateur a la possibilité 
 d'entrer des paramètres afin d'influencer et de préciser la création de la 
@@ -17,22 +28,19 @@ suite de morceaux. Il pourra ainsi sélectionner une tranche d'années s'il le
 souhaite, ou encore un artiste autour duquel articuler l'élaboration de la 
 playlist.
 
+
+\section{Particularités}
+\label{objectifs:particularites}
+
 L'originalité et l'apport supplémentaire qu'offre SoundCity par rapport aux 
 autres générateurs est donc l'enchaînement des morceaux. La partie centrale 
 du logiciel est celle qui s'occupe d'ordonner les musiques sélectionnées 
 dans la base de données. En effet, la sélection des morceaux correspondants 
 aux données rentrées par l'utilisateur n'est qu'un filtrage, tandis que 
 l'ordonnancement se concentre sur la similarité de ces musiques afin de les 
-faire s'enchaîner au mieux.
+faire s'enchaîner au mieux.\\
 
-La base de donnée utilisée pour le logiciel est tirée de la Million Song 
+La base de données utilisée pour le logiciel est tirée de la Million Song 
 Dataset (MSD). Comme son nom l'indique, c'est une base de données d'un 
 million de morceaux musicaux, qui contient toutes les informations 
 nécessaires sur les musiques, et dont la fiabilité est assurée.
-
-Un autre point important que le logiciel doit avoir, c'est le retour 
-utilisateur (feedback). La génération de la playlist peut prendre jusqu'à 
-plusieurs dizaines de secondes, et pendant ce temps là, il ne faut pas 
-laisser l'utilisateur sans aucune information. Pour ce faire, à tout moment 
-de la génération, une simple information sur le nombre de morceaux ajoutés à 
-la playlist à cet instant est affichée à l'utilisateur.
