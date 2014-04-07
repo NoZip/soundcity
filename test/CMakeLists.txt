@@ -17,6 +17,10 @@ add_executable(test_similarity test_similarity.cpp)
 target_link_libraries(test_similarity soundcity)
 target_link_libraries(test_similarity sqlite3)
 
+add_executable(test_playlist_similarity test_playlist_similarity.cpp)
+target_link_libraries(test_playlist_similarity soundcity)
+target_link_libraries(test_playlist_similarity sqlite3)
+
 # Tests unitaires
 enable_testing()
 
