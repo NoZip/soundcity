@@ -20,6 +20,7 @@ set(SOUNDCITY_LIB_SRCS
   ${PROJECT_SOURCE_DIR}/src/NaiveSimilarityStrategy.cpp
   ${PROJECT_SOURCE_DIR}/src/SimilarityStrategy.cpp
   ${PROJECT_SOURCE_DIR}/src/TextOutput.cpp
+  ${PROJECT_SOURCE_DIR}/src/TextIDOutput.cpp
   ${PROJECT_SOURCE_DIR}/src/Playlist.cpp)
 
 add_library( soundcity ${SOUNDCITY_LIB_SRCS} )
