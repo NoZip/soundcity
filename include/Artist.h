@@ -22,7 +22,7 @@ class Artist {
     std::string getName() const {return name;}
     float getFamiliarity() const {return familiarity;}
     float getPopularity() const {return popularity;}
-    std::list<int> getSimilarArtists() const {return similar;}
+    const std::list<int>& getSimilarArtists() const {return similar;}
 
   protected:
     int id;
