@@ -9,6 +9,7 @@ Album::Album(int id, const std::string &title, const std::string &artist, int re
   title(title),
   release(release)
   {
+    assert(id >= 0);
     assert(&title);
     assert(&artist);
     assert(release >= 0);

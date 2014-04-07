@@ -139,7 +139,6 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   buffer << u8"LIMIT " << size << u8";";
 
   string request = buffer.str();
-  // std::cout << request << std::endl; 
 
   // Request compilation
   sqlite3_stmt *preparedRequest = nullptr;
@@ -162,7 +161,6 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
   // Contruction de la pool de pistes
   while ((status = sqlite3_step(preparedRequest)) != SQLITE_DONE)
   {
-    //status = sqlite3_step(preparedRequest);
 
     assert(status == SQLITE_ROW);
 
@@ -182,7 +180,6 @@ TrackPool SQLiteDatabase::select(const OptionList &options, size_t size)
           reinterpret_cast<char const *>(
             sqlite3_column_text(preparedRequest, CONTEXT_ARTIST_NAME)
           ),
-          //"",
           sqlite3_column_double(preparedRequest, CONTEXT_ARTIST_FAMILIARITY),
           sqlite3_column_double(preparedRequest, CONTEXT_ARTIST_POPULARITY)
         ),

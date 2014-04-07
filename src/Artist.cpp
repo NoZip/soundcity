@@ -9,14 +9,9 @@ Artist::Artist(int id, const std::string &name, float familiarity, float popular
 	familiarity(familiarity),
 	popularity(popularity)
 {
-  //assert(id);
+  assert(id >= 0);
   assert(&name);
   assert(familiarity >= 0 && familiarity <= 1);
-  //solution temporaire pour combler à un soucis de BDD
-  if(popularity > 1)
-  {
-    popularity = 1;
-  }
   assert(popularity >= 0 && popularity <= 1);
 }
 

@@ -95,7 +95,6 @@ main(int argc, char *argv[])
   }
 
   //Création de la liste d'options
-  cout << artistName << endl;
   OptionList options(artistName,startYear,endYear,popularity,energy,rhythm,mood,size);
 
   cout << "Initialisation du générateur." << endl;

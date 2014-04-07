@@ -3,7 +3,6 @@
 #include <OptionList.h>
 #include <TrackPool.h>
 #include <cassert>
-#include <iostream>
 
 using namespace SoundCity;
 const float SIMILARITY_THRESHOLD = 0.5;
@@ -16,8 +15,8 @@ generationFeedback(),
 db(db)
 {
   assert(&similarity);
-  //assert(&selectionFeedback);
-  //assert(&generationFeedback);
+  assert(&selectionFeedback);
+  assert(&generationFeedback);
   assert(&db);
 }
 
