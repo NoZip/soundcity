@@ -3,7 +3,7 @@ all: main.pdf
 main.pdf: main.tex archi.tex besoins.tex existant.tex implementation.tex objectifs.tex scenarii.tex tests.tex memoire.bib
 	pdflatex $<
 	pdflatex $<
-	#bibtex main
+	bibtex main
 	pdflatex $<
 	pdflatex $<
 

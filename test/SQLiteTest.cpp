@@ -9,7 +9,7 @@
 #include <TrackPool.h>
 #include <SQLiteDatabase.h>
 
-const std::string DB_FILENAME = "../../scripts/test2.sqlite";
+const std::string DB_FILENAME = "../../data/final.sqlite";
 const int POOL_SIZE = 100;
 
 using namespace SoundCity;
