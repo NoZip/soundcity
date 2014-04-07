@@ -5,6 +5,7 @@
 #include <SimilarityStrategy.h>
 #include <Generator.h>
 #include <TextOutput.h>
+#include <TextIDOutput.h>
 
 #define PARAMS 1
 
@@ -45,6 +46,8 @@ usage (char *s)
 
   fprintf(stderr, "-s <size[1-100]> : Choix de la taille de la playlist générée (10 par défaut).\n");
 
+  fprintf(stderr, "-a <\"Nom d'artiste\"> : Choix du nom d'artiste de la playlist.\n");
+
   fprintf(stderr, "-o <fileName> : Choix du nom du fichier de sortie.\n");
 
   fprintf(stderr, "-v : activation du mode verbeux.\n");
@@ -67,7 +70,9 @@ main(int argc, char *argv[])
   int startYear = 0;
   int endYear = 3000;
   string fileName = "playlist.txt";
+  string artistName = "";
   bool verbose = false;
+  bool idOutput = false;
 
   //Lecture des paramètres
   for(int i = PARAMS; i < argc; ++i)
@@ -79,6 +84,8 @@ main(int argc, char *argv[])
     else if(strcmp(argv[i],"-p") == 0) popularity = atof(argv[++i]);
     else if(strcmp(argv[i],"-r") == 0) rhythm = atof(argv[++i]);
     else if(strcmp(argv[i],"-o") == 0) fileName = argv[++i];
+    else if(strcmp(argv[i],"-a") == 0) artistName = argv[++i];
+    else if(strcmp(argv[i],"-id") == 0) idOutput = true;
     else if(strcmp(argv[i],"-y") == 0)
     {
       startYear = atoi(argv[++i]);
@@ -88,7 +95,8 @@ main(int argc, char *argv[])
   }
 
   //Création de la liste d'options
-  OptionList options("",startYear,endYear,popularity,energy,rhythm,mood,size);
+  cout << artistName << endl;
+  OptionList options(artistName,startYear,endYear,popularity,energy,rhythm,mood,size);
 
   cout << "Initialisation du générateur." << endl;
   SimilarityStrategy similarity;
@@ -117,8 +125,14 @@ main(int argc, char *argv[])
       cout << "Re-génération terminée" << endl;
     }
   }
-  TextOutput output;
-  output.format(fileName,playlist);
+  if(idOutput)
+  {
+    TextIDOutput output;
+    output.format(fileName,playlist);
+  } else {
+    TextOutput output;
+    output.format(fileName,playlist);
+  }
   cout << "Taille de la playlist générée : " << playlist.size() << endl;
 
 
