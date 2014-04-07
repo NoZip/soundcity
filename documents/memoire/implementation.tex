@@ -1,37 +1,38 @@
-\section{Implementation}
-\label{impl:general}
-
-\section{Sélection}
-\label{impl:selection}
-
 \section{Génération}
 \label{impl:generation}
 
-L'objectif du générateur étant d'assurer une similarité entre tous les morceaux de la playlist mais surtout d'assurer la similarité des morceaux deux à deux dans l'enchainement des morceaux il a été choisi d'implémenter notre algorithme de génération sous forme itérative.
+L'objectif du générateur étant d'assurer une similarité entre tous les
+morceaux de la playlist mais surtout d'assurer la similarité des morceaux deux
+à deux dans l'enchainement des morceaux il a été choisi d'implémenter notre
+algorithme de génération sous forme itérative.
 
 \subsection{Algorithme naïf}
 \label{impl:selection:naif}
 
-La première solution proposée pour implémenter la génération de playlist a été de réaliser un algorithme glouton et naïf.\newline
+La première solution proposée pour implémenter la génération de playlist a été
+de réaliser un algorithme glouton et naïf.\newline
 
 L'algorithme est le suivant~:
 
 \begin{enumerate}
 \item Début.
 \item Le premier morceau de la Pool devient le premier morceau de la Playlist.
-\item Tant que la Playlist n'a pas la taille requise et que la Pool n'est pas vide~:
+\item Tant que la Playlist n'a pas la taille requise et que la Pool n'est pas
+vide~:
   \begin{enumerate}
     \item On met le maximum de smilarité à 0.
     \item Pour chaque morceau t dans la Pool~:
       \begin{enumerate}
-        \item On calcule le score de similarité entre t et le dernier morceau de la Playlist.
+        \item On calcule le score de similarité entre t et le dernier morceau
+        de la Playlist.
     \item Si le score de similarité est supérieur au score maximum~:
         \begin{enumerate}
         \item On remplace le score maximum par le nouveau score manimum.
         \item On enregistre le morceaux qui a le meilleur score de similarité.
         \end{enumerate}
         \end{enumerate}
-        \item On ajoute le morceau qui a la similarité maximale à la fin de la Playlist actuelle.
+        \item On ajoute le morceau qui a la similarité maximale à la fin de la
+        Playlist actuelle.
     \end{enumerate}
     \item Si la similarité globale de la Playlist est suffisante~:
     \begin{enumerate}
@@ -40,62 +41,106 @@ L'algorithme est le suivant~:
     \item Fin.
 \end{enumerate}
 
-Les résultats de cet algorithme sont bons mais il n'est cependant pas optimal. En effet à chaque ajout de morceau dans la Playlist cet algorithme ne vérifie pas la similarité du morceau testé avec tous les morceaux de la Playlist et n'assure pas que le morceau après lequel il est ajouté est celui avec lequel il a le plus grand score de similarité.
+Les résultats de cet algorithme sont bons mais il n'est cependant pas optimal.
+En effet à chaque ajout de morceau dans la Playlist cet algorithme ne vérifie
+pas la similarité du morceau testé avec tous les morceaux de la Playlist et
+n'assure pas que le morceau après lequel il est ajouté est celui avec lequel
+il a le plus grand score de similarité.
 
 
 \subsection{Algorithme optimal}
 \label{impl:selection:optimal}
 
-Comme énoncé précedemment, le premier algorithme implémenté n'est pas optimal. Il a donc été important de chercher un algorithme proposant une solution optimale ou capable de s'en approcher.\newline
+Comme énoncé précedemment, le premier algorithme implémenté n'est pas optimal.
+Il a donc été important de chercher un algorithme proposant une solution
+optimale ou capable de s'en approcher.\newline
 
-La solution trouvée est de considerer tous les morceaux de la Pool et d'en constituer un graphe complet reliant tous les morceaux les uns aux autres. Les arêtes seraient alors pondérées par le score de similarité entre les morceaux situés à leurs extrémités. Une fois le graphe construit il faut appliquer un algorithme capable de calculer le coût de tous les chemins de taille N (avec N la taille souhaitée pour la Playlist).\newline
+La solution trouvée est de considerer tous les morceaux de la Pool et d'en
+constituer un graphe complet reliant tous les morceaux les uns aux autres. Les
+arêtes seraient alors pondérées par le score de similarité entre les morceaux
+situés à leurs extrémités. Une fois le graphe construit il faut appliquer un
+algorithme capable de calculer le coût de tous les chemins de taille N (avec N
+la taille souhaitée pour la Playlist).\newline
 
-Un nouveau problème se pose alors~: Le calcul de similarité utilise les informations contenues dans la base de données. Ne sachant pas la précision de ces informations la question se pose alors de savoir s'il est pertinent d'utiliser un algorithme de grande complexité et de chercher un résultat optimal à partir de données non vérifiables.
+Un nouveau problème se pose alors~: Le calcul de similarité utilise les
+informations contenues dans la base de données. Ne sachant pas la précision de
+ces informations la question se pose alors de savoir s'il est pertinent
+d'utiliser un algorithme de grande complexité et de chercher un résultat
+optimal à partir de données non vérifiables.
 
 \subsection{Optimisation}
 \label{impl:selection:optimisation}
 
-Suite à la question que pose l'utilisation d'un algorithme optimal, il a été décidé que celui-ci ne serait pas implémenté et qu'il serait préférable d'améliorer le résultat obtenu par l'algorithme naïf en y apportant une légère optimisation.\newline
+Suite à la question que pose l'utilisation d'un algorithme optimal, il a été
+décidé que celui-ci ne serait pas implémenté et qu'il serait préférable
+d'améliorer le résultat obtenu par l'algorithme naïf en y apportant une légère
+optimisation.\newline
 
-En effet la faiblesse de cet algorithme est de ne comparer les morceaux restants dans la Pool qu'au dernier morceau ajouté dans la Playlist. Cette dernière étant implémentée par une liste doublement chainée il a alors été décidé de comparer les éléments restants dans la Pool au dernier mais aussi au premier élément de la Playlist afin d'augmenter les chances d'obtenir un meilleur résultat.
+En effet la faiblesse de cet algorithme est de ne comparer les morceaux
+restants dans la Pool qu'au dernier morceau ajouté dans la Playlist. Cette
+dernière étant implémentée par une liste doublement chaînée il a alors été
+décidé de comparer les éléments restants dans la Pool au dernier mais aussi au
+premier élément de la Playlist afin d'augmenter les chances d'obtenir un
+meilleur résultat.
 
 
 \section{Similarité}
 \label{impl:similarite}
 
-Afin de conserver une cohérence avec la façon dont sont représentés les différentes données autour des morceaux, il a été choisi de toujours ramener le score de similarité calculé entre 0 et 1.
+Afin de conserver une cohérence avec la façon dont sont représentés les
+différentes données autour des morceaux, il a été choisi de toujours ramener
+le score de similarité calculé entre 0 et 1.
 
 \subsection{Pattern strategy}
 \label{impl:similatite:strategy}
 
-Comme énoncé précedemment (c.f. Section \ref{besoins:nfonc:perf:mod:similarity}) il a été choisi d'implémenter le calcul de similarité en suivant le pattern strategy.\newline
+Comme énoncé précédemment (c.f. Section
+\ref{besoins:nfonc:perf:mod:similarity}) il a été choisi d'implémenter le calcul de similarité en suivant le pattern
+strategy.\newline
 
-Ce choix a été guidé par le fait que la base de données utilisée par notre générateur pouvant être changée par l'utilisateur. Il faut donc pouvoir facilement adapter notre calcul de similarité à une nouvelle base de données afin d'assurer que le générateur conserve sa pertinence.
+Ce choix a été guidé par le fait que la base de données utilisée par notre
+générateur pouvant être changée par l'utilisateur. Il faut donc pouvoir
+facilement adapter notre calcul de similarité à une nouvelle base de données
+afin d'assurer que le générateur conserve sa pertinence.
 
 \subsection{Calcul de similarité naïf}
 \label{impl:similarite:naif}
 
-Dans un premier temps nous avons choisi d'implémenter un calcul de similarité dit «~naïf~» afin d'assurer un fonctionnement minimal à notre générateur. 
-Le but de ce calcul n'est pas d'être pertinent mais de permettre de valider l'ordonnancement de plusieurs morceaux en fonction d'un seul critère.\newline
+Dans un premier temps nous avons choisi d'implémenter un calcul de similarité
+dit «~naïf~» afin d'assurer un fonctionnement minimal à notre générateur. 
+Le but de ce calcul n'est pas d'être pertinent mais de permettre de valider
+l'ordonnancement de plusieurs morceaux en fonction d'un seul critère.
 
-Pour cette implémentation du calcul, on se base uniquement sur la différence entre les années de sorties des albums dont sont extraits les morceaux à laquelle est appliquée un logarithme décimal. L'utilisation du logarithme décimal sert à considérer l'écart d'année entre les morceaux de façon non-linéaire afin d'atténuer les variations trop importantes. Le calcul est donc le suivant(avec date1 et date2 les années de sortie des albums des pistes track1 et track2)~:
+Pour cette implémentation du calcul, on se base uniquement sur la différence
+entre les années de sorties des albums dont sont extraits les morceaux à
+laquelle est appliquée un logarithme décimal. L'utilisation du logarithme
+décimal sert à considérer l'écart d'année entre les morceaux de façon
+non-linéaire afin d'atténuer les variations trop importantes. Le calcul est
+donc le suivant(avec date1 et date2 les années de sortie des albums des pistes
+track1 et track2)~:
 
 \begin{equation*}
   score(track1, track2) = log_{10}(date1 - date2)
 \end{equation*}\newline
 
-Enfin, pour ramener le score de similarité entre 0 et 1 on applique les opérations suivantes en considérant un seuil en dessous duquel la différence d'années est considérée négligeable~:
+Enfin, pour ramener le score de similarité entre 0 et 1 on applique les
+opérations suivantes en considérant un seuil en dessous duquel la différence
+d'années est considérée négligeable~:
 
 \begin{itemize}
 \item score = 1, si le score est supérieur à 1. 
 \item score = 0, si le score le score est inférieur au seuil.
-\item on retourne (1 - score) afin que 0 représente une similarité nulle et 1 une similarité totale.
+\item on retourne (1 - score) afin que 0 représente une similarité nulle et 1
+une similarité totale.
 \end{itemize}
 
 \subsection{Calcul de similarité complet}
 \label{impl:similarite:complet}
 
-Dans l'implémentation de ce calcul de similarité dit «~complet~», la formule utilisée pour produire un score prend en compte plusieurs caractèristiques des morceaux comparés. Ces caractèristiques sont extraites de la base de données et sont les suivantes~:
+Dans l'implémentation de ce calcul de similarité dit «~complet~», la formule
+utilisée pour produire un score prend en compte plusieurs caractéristiques des
+morceaux comparés. Ces caractéristiques sont extraites de la base de données
+et sont les suivantes~:
 
 \begin{itemize}
 \item le rythme
@@ -104,8 +149,13 @@ Dans l'implémentation de ce calcul de similarité dit «~complet~», la formule
 \item le nom de l'artiste
 \end{itemize}
 
-On peut imaginer la répartition de chaque morceau dans un repère à 4 dimensions où chacun des axes représente une de ces quatre caractèristiques. Le score de similarité est alors calculé en faisant une moyenne de la variation entre les deux morceaux sur chacun de ces axes.\newline
-Afin d'établir un ordre d'importance entre ces caractèristiques on décide de pondérer cette moyenne avec les facteurs suivants~:
+On peut imaginer la répartition de chaque morceau dans un repère à 4
+dimensions où chacun des axes représente une de ces quatre caractéristiques.
+Le score de similarité est alors calculé en faisant une moyenne de la
+variation entre les deux morceaux sur chacun de ces axes.
+
+Afin d'établir un ordre d'importance entre ces caractéristiques on décide de
+pondérer cette moyenne avec les facteurs suivants~:
 
 \begin{itemize}
 \item le rythme compte pour 40\%
@@ -114,12 +164,18 @@ Afin d'établir un ordre d'importance entre ces caractèristiques on décide de 
 \item le nom de l'artiste compte pour 10\%
 \end{itemize}
 
-Ces facteurs de pondération on été choisis de façon à ce que les données signal representent 70\% du score de similarité et les données contextuelles les 30\% restants.
+Ces facteurs de pondération on été choisis de façon à ce que les données
+signal representent 70\% du score de similarité et les données contextuelles
+les 30\% restants.
 
 \subsubsection{Rythme et énergie}
 \label{impl:similarite:complet:rhythm}
 
-La variation entre les deux morceaux sur les axes représentant le rythme et l'énergie se fait de façon classique en inversant le résultat pour toujours considérer 0 comme une similarité nulle et 1 comme une similarité totale comme suit(avec rhythm1, energy1, rhythm2 et energy2 respectivement les rythmes et energies des deux morceaux comparés) ~:
+La variation entre les deux morceaux sur les axes représentant le rythme et
+l'énergie se fait de façon classique en inversant le résultat pour toujours
+considérer 0 comme une similarité nulle et 1 comme une similarité totale comme
+suit(avec rhythm1, energy1, rhythm2 et energy2 respectivement les rythmes et
+énergies des deux morceaux comparés) ~:
 
 \begin{align}
   \Delta Rhythm = 1 - |rhythm1 - rhythm2|\\
@@ -129,14 +185,51 @@ La variation entre les deux morceaux sur les axes représentant le rythme et l'�
 \subsubsection{Date de sortie de l'album}
 \label{impl:similarite:complet:date}
 
-La variation entre les dates de sorties des albums dont sont extraits les deux morceaux est calculée de la même façon que dans le calcul de similarité naïve. (c.f \ref{impl:similarite:naif})
+La variation entre les dates de sorties des albums dont sont extraits les deux
+morceaux est calculée de la même façon que dans le calcul de similarité naïve.
+(c.f \ref{impl:similarite:naif})
 
 \subsubsection{Nom d'artiste}
 \label{impl:similarite:complet:name}
 
-On considère que deux morceaux du même artiste ont de grandes chances d'être similaires. Cette carectèristique étant faiblement pondéré dans le calcul de similarité on peut définir la variation sur le nom d'artiste comme suivant~:
+On considère que deux morceaux du même artiste ont de grandes chances d'être
+similaires. Cette carectèristique étant faiblement pondéré dans le calcul de
+similarité on peut définir la variation sur le nom d'artiste comme suivant~:
 
 \begin{align}
   \Delta Artist = \text{1, si artist1 = artist2.}\\
   \Delta Artist = \text{0, sinon.}
 \end{align}
+
+\section{Module de données SQLite}
+\label{implementation:sqlite}
+
+L’implémentation du module de données SQLite (classe \texttt{SQLiteDatabase})
+à été réalisée en utilisant la bibliothèque sqlite3
+\footnote{http://www.sqlite.org/about.html}. Elle permet une interface avec les
+fichiers sqlite. Elle est écrite en C, mais cela n'a pas posé de problème
+particulier.
+
+L’implémentation de la sélection dans le module SQLite est divisée en plusieurs
+phases~:
+\begin{description}
+  \item[La création de la requête~:] au format SQL, qui doit prendre en compte
+  les options passsés en paramètre à \texttt{select}. Des buffer de chaîne de
+  caractères ont été utilisés, permettant de meilleures performances. L'usage de
+  la fonction \texttt{random} avec la directive \texttt{ORDER BY}, permet la
+  sélection aléatoire.
+
+  \item[Execution et traitement de la requête~:] La requête est exécutée, puis
+  chaque ligne renvoyée par la base de données SQLite est transformé en une
+  piste, qui est ajouté à une liste temporaire.
+
+  \item[Ajout des artistes similaires~:] il faut demander à la base de donnée
+  quels sont les artistes similaires pour chaque piste sélectionnée. Le procédé
+  est relativement similaire à la phase précédente, mais est exécutée pour
+  chaque piste.
+
+  \item[Copie des pistes dans un \texttt{Trackpool}~:] Pour finir la liste
+  temporaire est copiée dans un \texttt{Trackpool}, qui sera retourné par la
+  fonction. La liste temporaire était nécéssaire, car la \texttt{Trackpool} ne
+  permet pas de modifier ses éléments.
+\end{description}
