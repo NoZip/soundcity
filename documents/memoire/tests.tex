@@ -1,4 +1,3 @@
-
 \section{Tests Unitaires}
 \label{tests:unitaires}
 
@@ -197,3 +196,10 @@ de la fonction $\Delta{}sim_{n}$ sera élevée lors de ces transitions violentes
 De plus, il est intéressant de superposer plusieurs de ces graphes présentant un
 rang n différent. On peut ainsi distinguer à partir de quelle rang la cohérence
 disparaît.
+
+\section{Test de fuites mémoire}
+\label{tests:valgrind}
+
+Le module de données est le seul module qui requiert (via l'utilisation de la bibliothèque SQLite) 
+l'utilisation d'allocations mémoire. L'outil valgrind nous a permis de vérifier que
+ce module, et donc le programme complet, ne contient aucune fuite mémoire à son execution.
