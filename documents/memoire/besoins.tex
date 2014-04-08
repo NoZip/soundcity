@@ -57,7 +57,7 @@ de similarité élevé avec le morceau qui le précède et celui qui le suit.
 \subsection{Visualisation de la playlist}
 \label{besoins:fonc:generation:visu}
 
-La playlist ainsi crée doit pouvoir être utilisable après avoir été générée. 
+La playlist ainsi créée doit pouvoir être utilisable après avoir été générée. 
 Il faut donc un moyen de la visualiser, et possiblement, de l’écouter. Le 
 moyen le plus simple, mais le plus rudimentaire, est le format textuel. Ce 
 format de sortie est principalement utilisé pour les tests, son utilité étant 
@@ -89,7 +89,7 @@ voulons éviter de frustrer les utilisateurs avec un temps d'attente trop long.
 Le feedback de l’interface permet de faire patienter, mais il faut aussi 
 raisonner en performance brute. Le nombre de pistes qui correspondent aux 
 critères rentrés par l’utilisateur peut être énorme. Il faut donc filtrer et 
-limiter le nombre de ces résultats, tout en conservant une le caractère 
+limiter le nombre de ces résultats, tout en conservant le caractère 
 aléatoire de la sélection.
 
 Nous avons donc décidé de limiter le nombre de morceaux sur lesquels faire nos 
@@ -166,8 +166,9 @@ utiliser de mots ou d'expressions trop techniques.
 \subsection{Base de données}
 \label{besoins:contraintes:bdd}
 Nous ne disposons pas d’analyseur de morceaux, et en créer un ne fait pas partie
-de notre sujet. Nous devons donc utiliser nous-même une base de données déjà
-existante afin de travailler dessus. Nous avons donc choisi d’utiliser la Million
+de notre sujet. Nous devons donc utiliser une base de données déjà
+existante afin de travailler dessus. Nous avons donc choisi d’utiliser 
+la Million
 Song Dataset (http://labrosa.ee.columbia.edu/millionsong/) qui contient toutes
 les informations dont nous avons besoin. Nous avons dû la convertir en base de 
 données SQL afin d'améliorer le temps de récupération des données. Il nous a 
@@ -182,14 +183,14 @@ d’au moins 1 To. Nous avons donc travaillé sur cet échantillon pour un gain 
 temps, de convertion, et de stockage.
 
 La MSD est la seule base pouvant nous servir de test, et les informations 
-qu'elle contient sont parfois très inexactes voire complétement absentes. Nous 
+qu'elle contient sont parfois inexactes voire complétement absentes. Nous 
 devons faire abstraction de ces cas particuliers, même si ils peuvent nous 
 poser des problèmes dans le cadre des tests (puisque nous considérons les 
 informations comme complètes et exactes).
 
-La base de données que nous utilisons au final sera donc une conversion en base 
+La base de données que nous utilisons au final est donc une conversion en base 
 SQL de la Million Song Database, dont nous avons extrait uniquement les valeurs 
-dont nous avons besoin.
+utiles à notre projet.
 
 \section{Prototypes}
 \label{besoins:proto}
@@ -202,7 +203,7 @@ de faire fonctionner notre programme sans avoir de grandes connaissances en
 informatique musicale. C'est pourquoi nous avons choisi de réaliser une interface
 graphique simple, et au vocabulaire accessible. Par exemple, l'energie du morceau
 est représentée par un curseur pouvant varier de «~léger~» à «~puissant~», sans
-proposer à l'utilisateur de choisir une valeur numérique précise, ce qui ne
+proposer à l'utilisateur de choisir une valeur numérique précise qui ne
 représenterait rien à ses yeux.
     
 Les différents paramètres d'entrée sont ainsi organisés de façon à partir du plus
