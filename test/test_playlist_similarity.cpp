@@ -34,11 +34,18 @@ main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
   Playlist playlist = generator.generate(options);
-  auto first = playlist.begin();
   int i = 1;
-  for(auto it = playlist.begin(); it != playlist.end(); ++it)
-    cout << "Similarité entre le morceau 1 et " << i++ << " : " << similarity.compute(*first,*it) << endl;
-
+  for(auto it = playlist.begin(); it != playlist.end();)
+  {
+    ++it; ++i;
+    auto next = it; ++next;
+    auto previous = it; --previous;
+    if(next != playlist.end() && it != playlist.end())
+    {
+      cout << "Similarité entre le le morceau " << i <<  " et le morceau " << i+1 << " : " << similarity.compute(*it,*next) << endl;
+      cout << "Similarité entre le le morceau " << i-1 <<  " et le morceau " << i+1 << " : " << similarity.compute(*previous,*next) << endl;
+    }
+  }
 
   return EXIT_SUCCESS;
 }
