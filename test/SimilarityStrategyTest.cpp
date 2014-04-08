@@ -1,0 +1,75 @@
+#include <cmath>
+#include <string>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/ui/text/TestRunner.h>
+
+#include <Track.h>
+#include <SimilarityStrategy.h>
+#include <iostream>
+#include <cassert>
+
+using namespace SoundCity;
+
+class SimilarityStrategyTest : public CppUnit::TestFixture
+{
+private:
+  SimilarityStrategy similarity;
+
+public:
+  void equality(){
+    
+    Artist artist1(1, "The White Stripes", 0.4, 1.0);
+    Album album1(1, "Elephant", "The White Stripes", 2012);
+    ContextData data1(artist1, album1, 0.5);
+    SignalData sign1(0.2,0.3,0.4);
+    Track track1(1, "Seven Nations Army", sign1 ,data1);
+
+    bool equal = false;
+ 
+    if(similarity.compute(track1,track1) == 1)
+      equal = true;
+
+     CPPUNIT_ASSERT(equal);
+  }
+
+  void superiority(){
+    Artist artist1(1, "The White Stripes", 0.4, 1.0);
+    Album album1(1, "Elephant", "The White Stripes", 2012);
+    ContextData data1(artist1, album1, 0.5);
+    SignalData sign1(0.2,0.3,0.4);
+    Track track1(1, "Seven Nations Army", sign1 ,data1);
+    
+    Artist artist2(2, "The Strokes", 0.4, 1.0);
+    Album album2(2, "Room On Fire", "The Strokes", 2003 );
+    ContextData data2(artist2, album2, 0.5);
+    SignalData sign2(0.2,0.3,0.5);
+    Track track2(2, "Reptilia", sign2, data2);
+    
+    Artist artist3(3, "Jacques Brel", 0.4, 1.0);
+    Album album3(3, "Ces gens-là", "Jacques Brel" ,1965);
+    ContextData data3(artist3, album3, 0.5);
+    SignalData sign3(0.8,0.8,0.8);
+    Track track3(3, "Ces gens-là", sign3, data3);
+
+    bool superior = false;
+
+    if(similarity.compute(track1, track2) > similarity.compute(track1, track3))
+      superior = true;
+
+    CPPUNIT_ASSERT(superior);
+  }
+
+  CPPUNIT_TEST_SUITE( SimilarityStrategyTest );
+  CPPUNIT_TEST( equality );
+  CPPUNIT_TEST( superiority );
+  CPPUNIT_TEST_SUITE_END();
+};
+
+int main(int argc, const char *argv[])
+{
+  CppUnit::TextUi::TestRunner runner;
+  runner.addTest( SimilarityStrategyTest::suite() );
+  runner.run();
+  return 0;
+}

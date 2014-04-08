@@ -6,16 +6,16 @@
 \caption{Diagramme général simplifié.}
 \end{figure}
 
-L'architecture de \emph{Soundcity} se sépare en trois grands modules~:
+L'architecture de \emph{Soundcity} se compose de trois grands modules~:
 \begin{itemize}
   \item Le Générateur.
   \item L'Interface Utilisateur.
   \item Le Retour Utilisateur, situé entre les deux.
 \end{itemize}
 
-Le module de sortie est un cas un peu particulier car il est majoritairement
+Le module de sortie est un cas un peu particulier car il est principalement
 utilisé par l'interface, mais peut être utilisé indépendamment. Il est donc
-classé dans le module d'interface mais sera traité dans une section séparée.
+classé dans le module d'interface, mais sera traité dans une section séparée.
 
 L'avantage de cette modularisation est qu'elle permet d'implémenter plusieurs
 interfaces, sans changer la génération, le retour utilisateur, et le format de
@@ -26,82 +26,84 @@ sortie.
 
 La modularisation discutée dans la section précédente (\ref{archi:general})
 demande que les modules puissent communiquer entre eux, pour s'envoyer les
-informations nécessaires a leur bon fonctionnement.
+informations nécessaires à leur bon fonctionnement.
 
 \subsection{Morceaux}
 \label{archi:communication:track}
 
-Le première structure nécessaire était celle représentant les morceaux, comme
-notre projet traite des morceaux de musique (plus précisément les données
-associés).
+Le première structure nécessaire était celle représentant les morceaux, étant 
+donné que notre projet traite des morceaux de musique (plus précisément les 
+données associés).
 
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{data/archi/track.png}
 \caption{Diagramme des classes constituant un morceau.}
 \end{figure}
 
-Il a été décidé de séparer les informations du morceaux selon deux  thèmes bien
+Il a été décidé de séparer les informations du morceaux selon deux thèmes bien
 distincts~:
 \begin{description}
-  \item[Lié au signal~:] Les données liés au signal sont directement reliés
+  \item[Liées au signal~:] Les données liées au signal sont directement reliées
   aux données du signal musical (ex. tempo).
-  \item[Lié au conntexte~:] Les données liés au contextes n'ont pas de lien avec
-  le signal, mais décrivent plutôt l'environnement du morceau (ex. popularité,
-  artiste, etc.).
+  \item[Liées au conntexte~:] Les données liées au contexte n'ont pas de 
+  lien avec le signal, mais décrivent plutôt l'environnement du morceau 
+  (ex. popularité, artiste, etc.).
 \end{description}
 
-Toutes les classes et sous-classes d'un morceau utilisent des accesseurs car leurs attributs ne doivent pas être modifiés après la sélection.
+Toutes les classes et sous-classes d'un morceau utilisent des accesseurs car 
+leurs attributs ne doivent pas être modifiés après la sélection.
 
-Deux structures de données sont utilisés pour contenir des ensembles de
+Deux structures de données sont utilisées pour contenir des ensembles de
 morceaux~:
 \begin{description}
-  \item[Playlist~:] une liste chainée, ce qui permet d'ajouter des éléments en
+  \item[Playlist~:] Une liste chainée, ce qui permet d'ajouter des éléments en
   complexité constante. De plus elle comporte un attribut qui atteste de sa validité.
 
-  \item[TrackPool~:] c'est la structure qui est renvoyée par le module de données (interface IDatabase cf. \ref{archi:generation:database}). La
-  complexité est bonne pour la recherche, l’itération, et l'insertion. de plus,
-  les éléments insérés ne peuvent êtres modifiés.
+  \item[TrackPool~:] C'est la structure qui est renvoyée par le module de 
+  données (interface IDatabase cf. \ref{archi:generation:database}). La
+  complexité est bonne pour la recherche, l’itération, et l'insertion. De plus,
+  les éléments insérés ne peuvent pas être modifiés.
 \end{description}
 
 \subsubsection{Données Signal}
 
 \begin{description}
-  \item[Rythme~:] descripteur représentant si le morceau est rythmé, il
+  \item[Rythme~:] Descripteur définissant si le morceau est rythmé. Il
   représente un score entre 0 et 1, exprimable en pourcentage.
-  \item[Énergie~:] décrit la puissance du morceau, la densité de son. C'est
-  aussi un score comme le rythme.
-  \item[Tonalité~:] représente le note et le mode (ex majeur ou mineur) du 
-  morceau\footnote{Ce descripteur n'a pas pu être implémenté, d'une part a
-  cause de la difficulté a trouver une structure pour le contenir, et d'autre
-  part par la faible fiabilité des valeurs liés dans la MSD}.
+  \item[Énergie~:] Décrit la puissance du morceau, la densité de son. C'est
+  aussi un score entre 0 et 1, tout comme le rythme.
+  \item[Tonalité~:] Représente la note et le mode (ex majeur ou mineur) du 
+  morceau\footnote{Ce descripteur n'a pas pu être implémenté, d'une part à
+  cause de la difficulté à trouver une structure pour le contenir, et d'autre
+  part à cause de la faible fiabilité des valeurs liées dans la MSD}.
 \end{description}
 
 \subsubsection{Données de Contexte}
 
 \begin{description}
-  \item[Popularité du morceau~:] un score décrivant la popularité de morceau,
+  \item[Popularité du morceau~:] Un score décrivant la popularité de morceau,
   varie en fonction du temps.
-  \footnote{N'est pas très utilisé, car souvent non rempli dans la MSD, en
-  plus comme nous utilisons un base de données statique, et que cette valeur
-  tends à changer, ce qui la rend assez inutile}
+  \footnote{N'est pas très utilisé, car souvent non rempli dans la MSD. De
+  plus, comme nous utilisons une base de données statique, et que cette valeur
+  tends à changer, elle se retrouve finalement assez obsolète}
 
-  \item[Artiste~:] représente l'artiste auteur du morceau.
+  \item[Artiste~:] Représente l'artiste/groupe auteur du morceau.
   % TODO
 
-  \item[Album~:] représente l'album dont est issu le morceau.
+  \item[Album~:] Représente l'album dont est issu le morceau.
   %TODO
 
-  Il est important de noter que contrairement aux diagramme UML, la liste
-  d'artistes similaires contient uniquement les identifiants les artistes
-  similaires, pour éviter des inclusions cycliques.
+  Il est important de noter que contrairement au diagramme UML, la liste
+  d'artistes similaires contient uniquement les identifiants des artistes 
+  afin d'éviter des inclusions cycliques.
 \end{description}
 
 \subsection{Options:~ La classe OptionList}
 \label{archi:communication:options}
 
-Il était important d'utiliser un objet pour passer les options entrés par
+Il était important d'utiliser un objet pour passer les options entrées par
 l'utilisateur. Ceci permet d’éviter de donner trop de paramètres aux fonctions
-du module de génération. De plus, Cette structure peut être modifiée, pour
+du module de génération. De plus, cette structure peut être modifiée pour
 permette de passer de nouvelles options.
 
 Pour éviter les erreurs, cette classe ne peut pas être modifiée après son
@@ -119,12 +121,12 @@ Le module de génération s'occupe de la création de la playlist.
 L'interface utilisateur appelle toutes les fonctions du module 
 de génération, et celui-ci appelle à son tour toutes les fonctions des deux 
 autres sous-modules. La fonction \texttt{initialization} sert à vérifier la 
-présence de base de données lors du démarrage du programme. 
+présence d'une base de données lors du démarrage du programme. 
 
 \subsection{Le cœur de la génération~: La classe Generator}
 \label{archi:generation:generator}
 
-La classe Generator est en lien direct avec l’interface. Elle à le rôle de chef
+La classe Generator est en lien direct avec l’interface. Elle a le rôle de chef
 d'orchestre, car elle va utiliser les sous-modules qui lui sont liés pour
 construire une playlist.
 
@@ -147,7 +149,7 @@ en créant une classe implémentant cette interface.
 \label{archi:generation:similarity}
 
 Cette interface utilise le design pattern \emph{Strategy} pour permettre de
-changer le comportement de la similarité dans le générateur. Pour cela
+changer le comportement de la similarité dans le générateur. Pour cela,
 la méthode \texttt{compute} est virtuelle. Grâce à cela, si une implémentation
 de cette interface est réalisée (dans notre cas la classe SimilarityStrategy),
 on peut passer par une référence de ISimilarityStrategy pour appeler notre
@@ -162,9 +164,13 @@ l'utilisateur un moyen de récupérer le résultat de la génération demandée.
 Ce module (ainsi que tous les modules de sortie pouvant être crées) devront 
 respecter l'interface OutputStrategy pour pouvoir être utilisés sur le 
 programme. Dans le cas du module TextOutput, le résultat obtenu sera mis 
-sous la forme d'un fichier texte contenant les titres des différents 
-morceaux de la playlist. Cette fonctionnalité est assurée par la fonction 
+sous la forme d'un fichier texte contenant les titres, artiste, album et années 
+des différents morceaux de la playlist. Cette fonctionnalité est assurée par la fonction 
 \texttt{format} à laquelle on passe la playlist générée en paramètre.
+
+Nous disposons d'un deuxième module de sortie (TextIDOutput), fonctionnant 
+comme le précédent, à la différence qu'il ne place que les ID (ici Echo 
+Nest dans notre base de données) des morceaux dans le fichier.
 
 \section{Interface Utilisateur}
 \label{archi:interface}
@@ -177,10 +183,45 @@ l'utilisateur sont transmises en paramètres. Lors du lancement du programme,
 une fonction d'initialisation est lancée. Cette dernière permet d'assurer 
 la présence de la base de données ainsi que du, ou des, module(s) de sortie.
 
+\subsection{Interface Utilisateur Console}
+\label{archi:interface:console}
+
+L'interface utilisateur console (ConsoleUserInterface) dispose de toutes les options 
+nécessaires au lancement d'une génération. 
+Elle doit être executée via la commande suivante :
+
+\texttt{./soundcitybash <database>}
+
+(\texttt{<database>} désignant le chemin vers la base de données).
+
+\vspace{3mm}
+\noindent L'utilisateur peut lancer le programme en utilisant les options suivantes :
+\begin{itemize}
+\item \texttt{-h} : Affiche l'aide
+\item \texttt{-y <startYear[1-3000]> <endYear[1-3000]>} : Définit un intervalle 
+d'années pour les morceaux.
+\item \texttt{-e <energy[0.0-1.0]>} : Impose une valeur d'énergie dans 
+la playlist générée.
+\item \texttt{-p <popularity[0.0-1.0]>} : Impose une valeur de popularité 
+dans la playlist générée.
+\item \texttt{-r <rhythm[0.0-1.0]>} : Impose un rythme dans la 
+playlist générée.
+\item \texttt{-m <mood[0.0-1.0]>} : Impose une humeur dans la 
+playlist générée (plus la valeur est élevée, plus le morceau est joyeux).
+\item \texttt{-s <size[1-100]>} : Choix de la taille de la 
+playlist générée, en nombre de morceaux (10 par défaut).
+\item \texttt{-o <fileName>} : Choix du nom du fichier de sortie.
+\item \texttt{-a < "Artist Name" >} : Impose un artiste.
+\item \texttt{-id} : Le fichier de sortie ne contiendra que les ID Echo Nest 
+des morceaux de la playlist
+\item \texttt{-v} : Active le retour utilisateur (feedback).
+\end{itemize}
+
 \subsection{Retour utilisateur}
 \label{archi:interface:feedback}
 
-Le retour utilisateur permet de notifier l'interface de l’avancement de la génération, de façon simple, en utilisant les design patterns \emph{Observable}
+Le retour utilisateur permet de notifier l'interface de l’avancement de la 
+génération, de façon simple, en utilisant les design patterns \emph{Observable}
 et \emph{Observer}.
 
 \begin{figure}[H]
@@ -188,14 +229,14 @@ et \emph{Observer}.
 \caption{Diagramme des classes servant au retour utilisateur.}
 \end{figure}
 
-Pour ajouter un retour utilisateur il faut donc implémenter un observer, en
+Pour ajouter un retour utilisateur, il faut donc implémenter un Observer, en
 fonction de la phase dont on veut avoir le retour. Cette implémentation passe
-surtout par la méthode \texttt{notify}, qui sera appelée par l'observer.
-Ensuite il suffit d'attacher notre observer à l'Observable lié dans le
+surtout par la méthode \texttt{notify}, qui sera appelée par l'Observer.
+Ensuite, il suffit d'attacher notre Observer à l'Observable lié dans le
 générateur (grâce à la méthode \texttt{attach}).
 
-La classe parente des observable, qui est aussi la seule classe template du
-projet, permet d'éviter la duplication de code. En effet les classes dérivant
+La classe parente des Observable, qui est aussi la seule classe template du
+projet, permet d'éviter la duplication de code. En effet, les classes dérivant
 d'Observable ont un comportement similaire, sauf au niveau de leur méthode
 \texttt{notifyAll}.
 
@@ -204,8 +245,8 @@ d'Observable ont un comportement similaire, sauf au niveau de leur méthode
 \caption{Diagramme de séquence du retour utilisateur.}
 \end{figure}
 
-L'utilisation des designs patterns est ici assez simple. les deux types
+L'utilisation des designs patterns est ici assez simple. Les deux types
 d'Observable sont contenus dans le générateur, qui appelle leur méthode
-\texttt{notifyAll} au moment opportun. Ainsi la méthode \texttt{notify} des 
-Observers liés est appelée, produisant ainsi le retour utilisateur qu'ils ont
+\texttt{notifyAll} au moment opportun. Ainsi, la méthode \texttt{notify} des 
+Observers liés est appelée, produisant le retour utilisateur qu'ils ont
 implémentés.
