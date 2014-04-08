@@ -29,4 +29,9 @@ target_link_libraries(SQLiteTest soundcity)
 target_link_libraries(SQLiteTest sqlite3)
 target_link_libraries(SQLiteTest cppunit)
 
+add_executable(SimilarityStrategyTest SimilarityStrategyTest.cpp)
+target_link_libraries(SimilarityStrategyTest soundcity)
+target_link_libraries(SimilarityStrategyTest cppunit)
+
 add_test(sqlite_test SQLiteTest)
+add_test(similarity_strategy_test SimilarityStrategyTest)
