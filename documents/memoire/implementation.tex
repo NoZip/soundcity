@@ -20,7 +20,7 @@ L'algorithme est le suivant~:
   \item Tant que la Playlist n'a pas la taille requise et que la Pool n'est pas
 vide~:
   \begin{enumerate}
-    \item On met le maximum de smilarité à 0.
+    \item On met le maximum de similarité à 0.
     \item Pour chaque morceau t dans la Pool~:
     \begin{enumerate}
       \item On calcule le score de similarité entre t et le dernier morceau
@@ -51,7 +51,7 @@ il a le plus grand score de similarité.
 \subsection{Algorithme optimal}
 \label{impl:selection:optimal}
 
-Comme énoncé précedemment, le premier algorithme implémenté n'est pas optimal.
+Comme énoncé précédemment, le premier algorithme implémenté n'est pas optimal.
 Il a donc été important de chercher un algorithme proposant une solution
 optimale, ou capable de s'en approcher.\newline
 
@@ -146,7 +146,7 @@ et sont les suivantes~:
 \item Le rythme.
 \item L'énergie.
 \item La date de sortie de l'album dont est extrait le morceau.
-\item Le nom de l'artiste.
+\item Les artistes similaires.
 \end{itemize}
 
 On peut imaginer la répartition de chaque morceau dans un repère à 4
@@ -161,11 +161,11 @@ pondérer cette moyenne avec les facteurs suivants~:
 \item Le rythme compte pour 40\%.
 \item L'énergie compte pour 30\%.
 \item La date de sortie de l'album compte pour 20\%.
-\item Le nom de l'artiste compte pour 10\%.
+\item Les artistes similaires pour 10\%.
 \end{itemize}
 
 Ces facteurs de pondération ont été choisis de façon à ce que les données
-signal representent 70\% du score de similarité, et les données contextuelles
+signal représentent 70\% du score de similarité, et les données contextuelles
 les 30\% restants.
 
 \subsubsection{Rythme et énergie}
@@ -189,17 +189,13 @@ La variation entre les dates de sorties des albums dont sont extraits les deux
 morceaux est calculée de la même façon que dans le calcul de similarité naïve.
 (c.f \ref{impl:similarite:naif})
 
-\subsubsection{Nom d'artiste}
-\label{impl:similarite:complet:name}
+\subsubsection{Artistes similaires}
+\label{impl:similarite:complet:artist}
 
-On considère que deux morceaux du même artiste ont de grandes chances d'être
-similaires. Cette carectèristique étant faiblement pondéré dans le calcul de
-similarité, on peut définir la variation sur le nom d'artiste comme suit~:
-
-\begin{align}
-  \Delta Artist = \text{1, si artist1 = artist2.}\\
-  \Delta Artist = \text{0, sinon.}
-\end{align}
+On considère que si les artistes sont similaires, les morceaux sont plus
+similaires. On utilise donc la liste d'artistes similaires. Si les deux artistes
+sont similaires, le score est de 75\%. Si les artistes sont identiques le score
+est de 100\%. Sinon le score est de 0\%.
 
 \section{Module de données SQLite}
 \label{implementation:sqlite}
@@ -214,12 +210,12 @@ L’implémentation de la sélection dans le module SQLite est divisée en plusi
 phases~:
 \begin{description}
   \item[La création de la requête~:] Au format SQL, qui doit prendre en compte
-  les options passsés en paramètre à \texttt{select}. Des buffers de chaîne de
+  les options passés en paramètre à \texttt{select}. Des buffers de chaîne de
   caractères ont été utilisés, permettant de meilleures performances. L'usage de
   la fonction \texttt{random} avec la directive \texttt{ORDER BY}, permet la
   sélection aléatoire.
 
-  \item[Execution et traitement de la requête~:] La requête est exécutée, puis
+  \item[Exécution et traitement de la requête~:] La requête est exécutée, puis
   chaque ligne renvoyée par la base de données SQLite est transformé en une
   piste, qui est ajouté à une liste temporaire.
 
@@ -230,6 +226,6 @@ phases~:
 
   \item[Copie des pistes dans un \texttt{Trackpool}~:] Pour finir, la liste
   temporaire est copiée dans un \texttt{Trackpool}, qui sera retourné par la
-  fonction. La liste temporaire était nécéssaire, car la \texttt{Trackpool} ne
+  fonction. La liste temporaire était nécessaire, car la \texttt{Trackpool} ne
   permet pas de modifier ses éléments.
 \end{description}
