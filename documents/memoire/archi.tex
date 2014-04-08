@@ -168,9 +168,9 @@ sous la forme d'un fichier texte contenant les titres, artiste, album et années
 des différents morceaux de la playlist. Cette fonctionnalité est assurée par la fonction 
 \texttt{format} à laquelle on passe la playlist générée en paramètre.
 
-Nous disposons d'un deuxième module de sortie (TextIDOutput), fonctionnant comme
-le précédent, mais ne place que les ID (ici Echo Nest dans notre base de données)
-des morceaux dans le fichier.
+Nous disposons d'un deuxième module de sortie (TextIDOutput), fonctionnant 
+comme le précédent, à la différence qu'il ne place que les ID (ici Echo 
+Nest dans notre base de données) des morceaux dans le fichier.
 
 \section{Interface Utilisateur}
 \label{archi:interface}
@@ -187,12 +187,12 @@ la présence de la base de données ainsi que du, ou des, module(s) de sortie.
 \label{archi:interface:console}
 
 L'interface utilisateur console (ConsoleUserInterface) dispose de toutes les options 
-nécéssaires au lancement d'une génération. 
+nécessaires au lancement d'une génération. 
 Elle doit être executée via la commande suivante :
 
 \texttt{./soundcitybash <database>}
 
-(\texttt{<database>} désignant l'emplacement vers la base de données).
+(\texttt{<database>} désignant le chemin vers la base de données).
 
 \vspace{3mm}
 \noindent L'utilisateur peut lancer le programme en utilisant les options suivantes :
@@ -209,19 +209,19 @@ playlist générée.
 \item \texttt{-m <mood[0.0-1.0]>} : Impose une humeur dans la 
 playlist générée (plus la valeur est élevée, plus le morceau est joyeux).
 \item \texttt{-s <size[1-100]>} : Choix de la taille de la 
-playlist générée (10 par défaut).
+playlist générée, en nombre de morceaux (10 par défaut).
 \item \texttt{-o <fileName>} : Choix du nom du fichier de sortie.
 \item \texttt{-a < "Artist Name" >} : Impose un artiste.
 \item \texttt{-id} : Le fichier de sortie ne contiendra que les ID Echo Nest 
 des morceaux de la playlist
-\item \texttt{-v} : Active le mode verbeux (feedback).
+\item \texttt{-v} : Active le retour utilisateur (feedback).
 \end{itemize}
 
 \subsection{Retour utilisateur}
 \label{archi:interface:feedback}
 
-Le retour utilisateur permet de notifier l'interface de l’avancement de la génération, 
-de façon simple, en utilisant les design patterns \emph{Observable}
+Le retour utilisateur permet de notifier l'interface de l’avancement de la 
+génération, de façon simple, en utilisant les design patterns \emph{Observable}
 et \emph{Observer}.
 
 \begin{figure}[H]
